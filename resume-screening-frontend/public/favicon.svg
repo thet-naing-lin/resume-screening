@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Resume Screening icon">
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0%" stop-color="#1d4ed8" />
+			<stop offset="100%" stop-color="#0f766e" />
+		</linearGradient>
+	</defs>
+	<rect width="64" height="64" rx="14" fill="url(#bg)" />
+	<path d="M18 16h28a2 2 0 0 1 2 2v28a2 2 0 0 1-2 2H18a2 2 0 0 1-2-2V18a2 2 0 0 1 2-2z" fill="#ffffff" opacity="0.14" />
+	<path d="M22 24h20M22 31h16M22 38h12" stroke="#ffffff" stroke-width="3" stroke-linecap="round" />
+	<circle cx="45" cy="45" r="8" fill="#ffffff" />
+	<path d="M51 51l7 7" stroke="#ffffff" stroke-width="4" stroke-linecap="round" />
+</svg>
