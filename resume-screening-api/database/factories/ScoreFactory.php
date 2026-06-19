@@ -3,12 +3,13 @@
 namespace Database\Factories;
 
 use App\Models\Resume;
-use App\Models\ResumeScore;
+use App\Models\JobDescription;
+use App\Models\Score;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ResumeScoreFactory extends Factory
+class ScoreFactory extends Factory
 {
-    protected $model = ResumeScore::class;
+    protected $model = Score::class;
 
     public function definition(): array
     {
@@ -17,14 +18,14 @@ class ResumeScoreFactory extends Factory
         $final    = round(($tfidf * 0.4) + ($semantic * 0.6), 4); // matches your 40/60 weighting
 
         return [
-            'resume_id'       => Resume::factory(),
-            'tfidf_score'     => $tfidf,
-            'semantic_score'  => $semantic,
-            'final_score'     => $final,
-            'status'          => 'under_review',
-            'matched_keywords' => fake()->words(5),
-            'ai_summary'      => null,
-            'interview_questions' => null,
+            'resume_id'          => Resume::factory(),
+            'job_description_id' => JobDescription::factory(),
+            'tfidf_score'        => $tfidf,
+            'semantic_score'     => $semantic,
+            'final_score'        => $final,
+            'status'             => 'under_review',
+            'ai_summary'         => null,
+            'questions_json'     => null,
         ];
     }
 

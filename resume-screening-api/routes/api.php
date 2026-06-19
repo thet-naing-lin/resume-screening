@@ -20,9 +20,9 @@ use Illuminate\Support\Facades\Request;
 
 Route::prefix('auth')->group(function () {
     // Route::post('/register', [AuthController::class, 'register']);
-    Route::post('/login',    [AuthController::class, 'login']);
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('/reset-password',  [AuthController::class, 'resetPassword']);
+    Route::post('/login',           [AuthController::class, 'login'])->middleware('throttle:login');
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:password-reset');
+    Route::post('/reset-password',  [AuthController::class, 'resetPassword'])->middleware('throttle:password-reset');
 });
 
 /*
@@ -60,8 +60,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/jobs/{job}',    [JobDescriptionController::class, 'update']);
     Route::delete('/jobs/{job}', [JobDescriptionController::class, 'destroy']);
 
-    // Resume Controller
-    Route::post('/resumes', [ResumeController::class, 'store']);
+    // Resume Controller (upload is rate-limited separately)
+    Route::post('/resumes', [ResumeController::class, 'store'])->middleware('throttle:upload');
     Route::get('/resumes',  [ResumeController::class, 'index']);
     Route::delete('/resumes/{resume}', [ResumeController::class, 'destroy']);
 
@@ -73,12 +73,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/candidate-rankings/{resumeId}/status', [CandidateRankingController::class, 'updateStatus']);
 
     // US-016 + US-017: AI insights for a resume
-    Route::post('/resumes/{resumeId}/ai-insights', [AiInsightController::class, 'generate']);
+    Route::post('/resumes/{resumeId}/ai-insights', [AiInsightController::class, 'generate'])->middleware('throttle:ai');
     Route::get('/resumes/{resumeId}/ai-insights',  [AiInsightController::class, 'show']);
 
     // Email templates and sending
     Route::get('/candidates/mail-template', [CandidateMailController::class, 'template']);
     Route::post('/candidates/send-mail',    [CandidateMailController::class, 'send']);
-    Route::post('/candidates/mail/send-bulk', [CandidateMailController::class, 'sendBulk']);
+    Route::post('/candidates/mail/send-bulk', [CandidateMailController::class, 'sendBulk'])->middleware('throttle:bulk-mail');
     Route::get('/candidates/mail/bulk-preview', [CandidateMailController::class, 'bulkPreview']);
 });

@@ -17,7 +17,7 @@ class AuthControllerTest extends TestCase
         parent::setUp();
         // Create roles needed for tests
         Role::create(['name' => 'admin',        'guard_name' => 'web']);
-        Role::create(['name' => 'hr_recruiter', 'guard_name' => 'web']);
+        Role::create(['name' => 'hr', 'guard_name' => 'web']);
     }
 
     // ── Login ─────────────────────────────────────────────────────
