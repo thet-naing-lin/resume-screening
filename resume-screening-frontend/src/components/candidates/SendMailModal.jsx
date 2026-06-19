@@ -13,12 +13,10 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
 
   const candidateName = resume?.candidate?.name ?? "Candidate";
 
-  // Load template whenever type changes
   useEffect(() => {
     setFetching(true);
     setSuccess(false);
     setError(null);
-
     getMailTemplate(type, candidateName, jobTitle)
       .then((res) => {
         setSubject(res.data.subject);
@@ -42,8 +40,7 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
       setSuccess(true);
     } catch (err) {
       setError(
-        err.response?.data?.message ??
-          "Failed to send email. Please try again.",
+        err.response?.data?.message ?? "Failed to send email. Please try again.",
       );
     } finally {
       setLoading(false);
@@ -51,109 +48,100 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
   };
 
   return (
-    <div
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
-      onClick={onClose}
-    >
-      <div
-        className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl flex flex-col max-h-[90vh]"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 bg-surface-950/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+         onClick={onClose}>
+      <div className="bg-white rounded-3xl shadow-modal w-full max-w-2xl flex flex-col max-h-[90vh] animate-scale-in"
+           onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-100">
           <div>
-            <h2 className="font-bold text-gray-900 text-lg">Send Email</h2>
-            <p className="text-sm text-gray-400">
-              To:{" "}
-              <span className="font-medium text-gray-600">{candidateName}</span>{" "}
-              <span className="text-gray-300">
-                ({resume?.candidate?.email})
-              </span>
+            <h2 className="font-bold text-surface-900 text-lg">Send Email</h2>
+            <p className="text-sm text-surface-400">
+              To: <span className="font-medium text-surface-600">{candidateName}</span>
+              {" "}
+              <span className="text-surface-300">({resume?.candidate?.email})</span>
             </p>
           </div>
-          <button
-            onClick={onClose}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors"
-          >
-            ✕
+          <button onClick={onClose}
+                  className="w-8 h-8 flex items-center justify-center rounded-xl text-surface-400
+                             hover:bg-surface-100 hover:text-surface-600 transition-colors">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
           </button>
         </div>
 
         {/* Body */}
-        <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
-          {/* Mail type toggle */}
-          <div className="flex gap-2">
+        <div className="overflow-y-auto flex-1 px-6 py-5 space-y-5">
+          {/* Mail type toggle — pill style */}
+          <div className="flex gap-1.5 p-1 bg-surface-100 rounded-2xl">
             <button
               onClick={() => setType("interview")}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 type === "interview"
-                  ? "bg-indigo-600 text-white border-indigo-600"
-                  : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+                  ? "bg-white text-surface-900 shadow-sm"
+                  : "text-surface-500 hover:text-surface-700"
               }`}
             >
-              🎉 Interview Invitation
+              Interview Invitation
             </button>
             <button
               onClick={() => setType("rejection")}
-              className={`flex-1 py-2 rounded-xl text-sm font-medium border transition-colors ${
+              className={`flex-1 py-2.5 rounded-xl text-sm font-medium transition-all ${
                 type === "rejection"
-                  ? "bg-gray-600 text-white border-gray-600"
-                  : "bg-white text-gray-600 border-gray-300 hover:bg-gray-50"
+                  ? "bg-white text-surface-900 shadow-sm"
+                  : "text-surface-500 hover:text-surface-700"
               }`}
             >
-              📩 Rejection Notice
+              Rejection Notice
             </button>
           </div>
 
           {fetching ? (
             <div className="space-y-3 animate-pulse">
-              <div className="h-9 bg-gray-100 rounded-xl" />
-              <div className="h-48 bg-gray-100 rounded-xl" />
+              <div className="h-10 bg-surface-100 rounded-2xl" />
+              <div className="h-48 bg-surface-100 rounded-2xl" />
             </div>
           ) : (
             <>
-              {/* To Email — editable */}
+              {/* To Email */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-sm font-medium text-surface-700 mb-1.5">
                   To (Email Address)
                 </label>
                 <input
                   type="email"
                   value={toEmail}
                   onChange={(e) => setToEmail(e.target.value)}
-                  className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  className="input-field"
                   placeholder="candidate@email.com"
                 />
-                <p className="text-xs text-amber-600 mt-1">
-                  ✏️ Verify the email is correct before sending.
+                <p className="text-xs text-amber-600 mt-1.5 flex items-center gap-1">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Verify the email is correct before sending.
                 </p>
               </div>
 
               {/* Subject */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Subject
-                </label>
-                <input
-                  type="text"
-                  value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
-                  className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
-                />
+                <label className="block text-sm font-medium text-surface-700 mb-1.5">Subject</label>
+                <input type="text" value={subject} onChange={(e) => setSubject(e.target.value)}
+                       className="input-field" />
               </div>
 
               {/* Body */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Message Body
-                </label>
+                <label className="block text-sm font-medium text-surface-700 mb-1.5">Message Body</label>
                 <textarea
                   rows={12}
                   value={body}
                   onChange={(e) => setBody(e.target.value)}
-                  className="w-full border border-gray-300 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 resize-y font-mono"
+                  className="input-field resize-y font-mono text-sm"
                 />
-                <p className="text-xs text-gray-400 mt-1">
+                <p className="text-xs text-surface-400 mt-1.5">
                   You can freely edit the subject and message before sending.
                 </p>
               </div>
@@ -162,35 +150,25 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
 
           {/* Feedback */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
-              ⚠️ {error}
-            </div>
+            <div className="flash-error mb-0">{error}</div>
           )}
           {success && (
-            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm">
-              {/* ✅ Email sent successfully to {resume?.candidate?.email} */}✅
-              Email sent successfully to {toEmail}
+            <div className="flash-success mb-0">
+              <span>Email sent successfully to {toEmail}</span>
             </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 border-t border-gray-100 flex justify-end gap-2">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl text-sm border border-gray-300 text-gray-600 hover:bg-gray-50 transition-colors"
-          >
+        <div className="px-6 py-4 border-t border-surface-100 flex justify-end gap-2">
+          <button onClick={onClose} className="btn-secondary">
             {success ? "Close" : "Cancel"}
           </button>
           {!success && (
             <button
               onClick={handleSend}
               disabled={loading || fetching || !subject || !body}
-              className={`px-5 py-2 rounded-xl text-sm font-medium text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-                type === "interview"
-                  ? "bg-indigo-600 hover:bg-indigo-700"
-                  : "bg-gray-600 hover:bg-gray-700"
-              }`}
+              className="btn-primary"
             >
               {loading ? "Sending..." : "Send Email"}
             </button>
