@@ -22,19 +22,19 @@ class ResumeControllerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        Storage::fake('local');
+        Storage::fake('private');
 
-        Role::create(['name' => 'admin',        'guard_name' => 'web']);
-        Role::create(['name' => 'hr_recruiter', 'guard_name' => 'web']);
+        Role::create(['name' => 'admin', 'guard_name' => 'web']);
+        Role::create(['name' => 'hr',    'guard_name' => 'web']);
 
         $this->admin = User::factory()->create();
         $this->admin->assignRole('admin');
 
         $this->hr = User::factory()->create();
-        $this->hr->assignRole('hr_recruiter');
+        $this->hr->assignRole('hr');
 
         $this->hr2 = User::factory()->create();
-        $this->hr2->assignRole('hr_recruiter');
+        $this->hr2->assignRole('hr');
     }
 
     // ── Upload ────────────────────────────────────────────────────
@@ -46,7 +46,7 @@ class ResumeControllerTest extends TestCase
 
         $response = $this->actingAs($this->hr)
             ->postJson('/api/resumes', [
-                'resume'             => [$file],
+                'resume_files'       => [$file],
                 'job_description_id' => $job->id,
             ]);
 
@@ -61,12 +61,12 @@ class ResumeControllerTest extends TestCase
 
         $response = $this->actingAs($this->hr)
             ->postJson('/api/resumes', [
-                'resume'             => $file,
+                'resume_files'       => [$file],
                 'job_description_id' => $job->id,
             ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['resume']);
+            ->assertJsonValidationErrors(['resume_files.0']);
     }
 
     public function test_upload_rejects_files_over_5mb()
@@ -76,12 +76,12 @@ class ResumeControllerTest extends TestCase
 
         $response = $this->actingAs($this->hr)
             ->postJson('/api/resumes', [
-                'resume'             => $file,
+                'resume_files'       => [$file],
                 'job_description_id' => $job->id,
             ]);
 
         $response->assertStatus(422)
-            ->assertJsonValidationErrors(['resume']);
+            ->assertJsonValidationErrors(['resume_files.0']);
     }
 
     // ── Role-based data isolation ─────────────────────────────────

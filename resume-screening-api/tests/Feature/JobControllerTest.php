@@ -80,12 +80,16 @@ class JobControllerTest extends TestCase
 
     public function test_hr_can_update_their_own_job_description()
     {
-        $job = JobDescription::factory()->create(['created_by' => $this->hr->id]);
+        $job = JobDescription::factory()->create(['user_id' => $this->hr->id]);
 
         $response = $this->actingAs($this->hr)
             ->putJson("/api/jobs/{$job->id}", [
-                'title'       => 'Updated Title',
-                'description' => 'Updated description text.',
+                'title'             => 'Updated Title',
+                'description'       => 'Updated description text has enough chars.',
+                'required_skills'   => ['PHP', 'Laravel', 'React'],
+                'experience_level'  => 'mid',
+                'employment_type'   => 'full-time',
+                'status'            => 'active',
             ]);
 
         $response->assertStatus(200)
@@ -96,7 +100,7 @@ class JobControllerTest extends TestCase
 
     public function test_hr_can_delete_a_job_description()
     {
-        $job = JobDescription::factory()->create(['created_by' => $this->hr->id]);
+        $job = JobDescription::factory()->create(['user_id' => $this->hr->id]);
 
         $response = $this->actingAs($this->hr)
             ->deleteJson("/api/jobs/{$job->id}");

@@ -4,10 +4,8 @@ namespace Tests\Feature;
 
 use App\Models\Candidate;
 use App\Models\Resume;
-use App\Models\ResumeScore;
 use App\Models\User;
 use App\Models\JobDescription;
-use Database\Factories\ResumeScoreFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
@@ -28,16 +26,16 @@ class CandidateMailControllerTest extends TestCase
         Mail::fake(); // intercept all emails — nothing actually sends
 
         Role::create(['name' => 'admin',        'guard_name' => 'web']);
-        Role::create(['name' => 'hr_recruiter', 'guard_name' => 'web']);
+        Role::create(['name' => 'hr', 'guard_name' => 'web']);
 
         $this->admin = User::factory()->create();
         $this->admin->assignRole('admin');
 
         $this->hr = User::factory()->create();
-        $this->hr->assignRole('hr_recruiter');
+        $this->hr->assignRole('hr');
 
         $this->hr2 = User::factory()->create();
-        $this->hr2->assignRole('hr_recruiter');
+        $this->hr2->assignRole('hr');
     }
 
     // ── Template ──────────────────────────────────────────────────
@@ -190,8 +188,8 @@ class CandidateMailControllerTest extends TestCase
         ]);
 
         DB::table('scores')->insert([
-            ['resume_id' => $resume1->id, 'status' => 'shortlisted', 'created_at' => now(), 'updated_at' => now()],
-            ['resume_id' => $resume2->id, 'status' => 'shortlisted', 'created_at' => now(), 'updated_at' => now()],
+            ['resume_id' => $resume1->id, 'job_description_id' => $job1->id, 'status' => 'shortlisted', 'created_at' => now(), 'updated_at' => now()],
+            ['resume_id' => $resume2->id, 'job_description_id' => $job1->id, 'status' => 'shortlisted', 'created_at' => now(), 'updated_at' => now()],
         ]);
 
         $response = $this->actingAs($this->admin)

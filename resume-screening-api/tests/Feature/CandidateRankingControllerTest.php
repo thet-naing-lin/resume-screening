@@ -4,10 +4,9 @@ namespace Tests\Feature;
 
 use App\Models\Candidate;
 use App\Models\Resume;
-use App\Models\ResumeScore;
+use App\Models\Score;
 use App\Models\User;
 use App\Models\JobDescription;
-use Database\Factories\ResumeScoreFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Role;
 use Tests\TestCase;
@@ -39,23 +38,35 @@ class CandidateRankingControllerTest extends TestCase
 
     public function test_hr_only_sees_rankings_for_their_own_resumes()
     {
+        $job = JobDescription::factory()->create();
+
         $c1 = Candidate::factory()->create();
         $c2 = Candidate::factory()->create();
 
-        $r1 = Resume::factory()->create(['uploaded_by' => $this->hr->id,  'candidate_id' => $c1->id]);
-        $r2 = Resume::factory()->create(['uploaded_by' => $this->hr2->id, 'candidate_id' => $c2->id]);
+        $r1 = Resume::factory()->create([
+            'uploaded_by'        => $this->hr->id,
+            'candidate_id'       => $c1->id,
+            'job_description_id' => $job->id,
+            'status'             => 'scored',
+        ]);
+        $r2 = Resume::factory()->create([
+            'uploaded_by'        => $this->hr2->id,
+            'candidate_id'       => $c2->id,
+            'job_description_id' => $job->id,
+            'status'             => 'scored',
+        ]);
 
-        ResumeScoreFactory::factory()->create(['resume_id' => $r1->id]);
-        ResumeScoreFactory::factory()->create(['resume_id' => $r2->id]);
-
-        $resume = Resume::factory()->create([
-            'uploaded_by' => $this->hr->id,
-            'status'      => 'shortlisted',
-            'score'       => 85.5,
+        Score::factory()->create([
+            'resume_id'          => $r1->id,
+            'job_description_id' => $job->id,
+        ]);
+        Score::factory()->create([
+            'resume_id'          => $r2->id,
+            'job_description_id' => $job->id,
         ]);
 
         $response = $this->actingAs($this->hr)
-            ->getJson('/api/candidate-rankings');
+            ->getJson('/api/candidate-rankings?job_description_id=' . $job->id);
 
         $response->assertStatus(200);
         $ids = collect($response->json('data'))->pluck('resume_id')->toArray();
@@ -66,24 +77,27 @@ class CandidateRankingControllerTest extends TestCase
 
     public function test_hr_can_update_candidate_status_to_shortlisted()
     {
+        $job    = JobDescription::factory()->create();
+
         $resume = Resume::factory()->create([
-            'uploaded_by' => $this->hr->id,
-            'status'      => 'shortlisted',
-            'score'       => 85.5,
+            'uploaded_by'        => $this->hr->id,
+            'job_description_id' => $job->id,
+            'status'             => 'scored',
         ]);
 
-        $score  = ResumeScoreFactory::factory()->create([
-            'resume_id' => $resume->id,
-            'status'    => 'under_review',
+        $score  = Score::factory()->create([
+            'resume_id'          => $resume->id,
+            'job_description_id' => $job->id,
+            'status'             => 'under_review',
         ]);
 
         $response = $this->actingAs($this->hr)
-            ->patchJson("/api/candidate-rankings/{$score->id}/status", [
+            ->patchJson("/api/candidate-rankings/{$resume->id}/status", [
                 'status' => 'shortlisted',
             ]);
 
         $response->assertStatus(200);
-        $this->assertDatabaseHas('resume_scores', [
+        $this->assertDatabaseHas('scores', [
             'id'     => $score->id,
             'status' => 'shortlisted',
         ]);
@@ -91,11 +105,20 @@ class CandidateRankingControllerTest extends TestCase
 
     public function test_status_update_rejects_invalid_status_value()
     {
-        $resume = Resume::factory()->create(['uploaded_by' => $this->hr->id]);
-        $score  = ResumeScoreFactory::factory()->create(['resume_id' => $resume->id]);
+        $job    = JobDescription::factory()->create();
+
+        $resume = Resume::factory()->create([
+            'uploaded_by'        => $this->hr->id,
+            'job_description_id' => $job->id,
+            'status'             => 'scored',
+        ]);
+        Score::factory()->create([
+            'resume_id'          => $resume->id,
+            'job_description_id' => $job->id,
+        ]);
 
         $response = $this->actingAs($this->hr)
-            ->patchJson("/api/candidate-rankings/{$score->id}/status", [
+            ->patchJson("/api/candidate-rankings/{$resume->id}/status", [
                 'status' => 'maybe',
             ]);
 
@@ -105,15 +128,21 @@ class CandidateRankingControllerTest extends TestCase
 
     public function test_hr_can_export_rankings_as_csv()
     {
+        $job       = JobDescription::factory()->create();
         $candidate = Candidate::factory()->create();
         $resume    = Resume::factory()->create([
-            'uploaded_by'  => $this->hr->id,
-            'candidate_id' => $candidate->id,
+            'uploaded_by'        => $this->hr->id,
+            'candidate_id'       => $candidate->id,
+            'job_description_id' => $job->id,
+            'status'             => 'scored',
         ]);
-        ResumeScoreFactory::factory()->create(['resume_id' => $resume->id]);
+        Score::factory()->create([
+            'resume_id'          => $resume->id,
+            'job_description_id' => $job->id,
+        ]);
 
         $response = $this->actingAs($this->hr)
-            ->getJson('/api/candidate-rankings/export');
+            ->getJson('/api/candidate-rankings/export?job_description_id=' . $job->id);
 
         $response->assertStatus(200)
             ->assertHeader('Content-Type', 'text/csv; charset=UTF-8');
