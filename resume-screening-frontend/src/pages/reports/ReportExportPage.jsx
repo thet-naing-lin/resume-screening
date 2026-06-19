@@ -1,8 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs } from "../../api/jobApi";
 import { exportRankingsCsv } from "../../api/candidatesRankingApi";
-import { useEffect } from "react";
 
 export default function ReportsExportPage() {
   const [jobDescriptions, setJobDescriptions] = useState([]);
@@ -16,11 +15,7 @@ export default function ReportsExportPage() {
     getJobs()
       .then((res) => {
         const raw = res.data;
-        const jobs = Array.isArray(raw)
-          ? raw
-          : Array.isArray(raw?.jobs)
-            ? raw.jobs
-            : [];
+        const jobs = Array.isArray(raw) ? raw : Array.isArray(raw?.jobs) ? raw.jobs : [];
         setJobDescriptions(jobs);
       })
       .catch(console.error);
@@ -28,7 +23,6 @@ export default function ReportsExportPage() {
 
   const handleExport = async () => {
     if (!selectedJob) return;
-
     setExporting(true);
     setExportError(null);
     setExportSuccess(false);
@@ -38,7 +32,6 @@ export default function ReportsExportPage() {
         job_description_id: selectedJob,
         ...(statusFilter && { status: statusFilter }),
       });
-
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement("a");
       link.href = url;
@@ -63,38 +56,39 @@ export default function ReportsExportPage() {
 
   return (
     <DashboardLayout>
-      <div className="p-6 max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto animate-fade-in">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl font-bold text-gray-900">Reports & Export</h1>
-          <p className="text-sm text-gray-500 mt-1">
-            Export candidate ranking data as CSV for offline review or
-            reporting.
-          </p>
+        <div className="page-header">
+          <div>
+            <h1>Reports & Export</h1>
+            <p>Export candidate ranking data as CSV for offline review or reporting.</p>
+          </div>
         </div>
 
         {/* Export Card */}
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 mb-6">
+        <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8">
           <div className="flex items-start gap-4 mb-6">
-            <div className="bg-green-100 text-green-700 rounded-xl p-3 text-2xl">
-              📊
+            <div className="bg-brand-50 text-brand-600 rounded-2xl p-3.5">
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
+                  d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
             </div>
             <div>
-              <h2 className="font-semibold text-gray-900 text-lg">
+              <h2 className="font-semibold text-surface-900 text-lg">
                 Candidate Rankings Export
               </h2>
-              <p className="text-sm text-gray-500 mt-0.5">
-                Download a CSV file of ranked candidates for a selected job
-                position. Includes scores, status, AI summary, and interview
-                questions.
+              <p className="text-sm text-surface-500 mt-0.5">
+                Download a CSV file of ranked candidates for a selected job position.
+                Includes scores, status, AI summary, and interview questions.
               </p>
             </div>
           </div>
 
+          {/* Selectors */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            {/* Job selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-surface-700 mb-1.5">
                 Job Position <span className="text-red-500">*</span>
               </label>
               <select
@@ -104,26 +98,22 @@ export default function ReportsExportPage() {
                   setExportSuccess(false);
                   setExportError(null);
                 }}
-                className="border border-gray-300 rounded-xl px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="select-field w-full"
               >
                 <option value="">-- Select a job --</option>
                 {jobDescriptions.map((job) => (
-                  <option key={job.id} value={job.id}>
-                    {job.title}
-                  </option>
+                  <option key={job.id} value={job.id}>{job.title}</option>
                 ))}
               </select>
             </div>
-
-            {/* Status filter */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
+              <label className="block text-sm font-medium text-surface-700 mb-1.5">
                 Filter by Status
               </label>
               <select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="border border-gray-300 rounded-xl px-3 py-2 w-full text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                className="select-field w-full"
               >
                 <option value="">All Candidates</option>
                 <option value="shortlisted">Shortlisted Only</option>
@@ -133,12 +123,12 @@ export default function ReportsExportPage() {
             </div>
           </div>
 
-          {/* What's included info */}
-          <div className="bg-gray-50 rounded-xl p-4 mb-6">
-            <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">
+          {/* CSV includes info */}
+          <div className="bg-surface-50 rounded-2xl p-5 mb-6">
+            <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-3">
               CSV includes
             </p>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
               {[
                 "Rank & Candidate Name",
                 "Email & Phone",
@@ -150,54 +140,61 @@ export default function ReportsExportPage() {
                 "5 Interview Questions",
                 "Upload Date",
               ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-1.5 text-xs text-gray-600"
-                >
-                  <span className="text-green-500">✓</span> {item}
+                <div key={item} className="flex items-center gap-2 text-xs text-surface-600">
+                  <svg className="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                  </svg>
+                  {item}
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Feedback messages */}
+          {/* Messages */}
           {exportError && (
-            <div className="flex items-center justify-between bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-4">
-              <span>⚠️ {exportError}</span>
-              <button
-                onClick={() => setExportError(null)}
-                className="text-red-400 hover:text-red-600 font-bold ml-4"
-              >
-                ✕
-              </button>
+            <div className="flash-error mb-4">
+              <span>{exportError}</span>
+              <button onClick={() => setExportError(null)} className="font-bold ml-4">✕</button>
             </div>
           )}
 
           {exportSuccess && (
-            <div className="flex items-center justify-between bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-xl text-sm mb-4">
+            <div className="flash-success mb-4">
               <span>
-                ✅ Export successful!
+                Export successful!
                 {selectedJobTitle && (
                   <span className="font-medium"> "{selectedJobTitle}"</span>
                 )}{" "}
                 rankings downloaded.
               </span>
-              <button
-                onClick={() => setExportSuccess(false)}
-                className="text-green-400 hover:text-green-600 font-bold ml-4"
-              >
-                ✕
-              </button>
+              <button onClick={() => setExportSuccess(false)} className="font-bold ml-4">✕</button>
             </div>
           )}
 
-          {/* Export button */}
+          {/* Download button — uses brand primary, not green */}
           <button
             onClick={handleExport}
             disabled={!selectedJob || exporting}
-            className="flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+            className="btn-primary"
           >
-            {exporting ? "⏳ Exporting..." : "⬇️ Download CSV"}
+            {exporting ? (
+              <>
+                <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Exporting...
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                Download CSV
+              </>
+            )}
           </button>
         </div>
       </div>
