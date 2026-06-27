@@ -301,6 +301,7 @@ export default function Login() {
         <div className="mt-4 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-xs text-blue-700">
           <p className="font-semibold mb-1">Demo Credentials</p>
           <p>Admin: admin@resumescreening.com / Admin@12345</p>
+          <p>HR: hr@resumescreening.com / asdfasdf</p>
         </div>
       </div>
     </div>
