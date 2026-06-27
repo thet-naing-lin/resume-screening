@@ -48,6 +48,7 @@ const getRankMedal = (index) => {
 // ── Main Component ────────────────────────────────────────────
 export default function CandidateRankingPage() {
   const [jobDescriptions, setJobDescriptions] = useState([]);
+  const [jobsLoading, setJobsLoading] = useState(true);
   const [selectedJob, setSelectedJob] = useState("");
   const [filters, setFilters] = useState({
     min_score: "",
@@ -94,13 +95,15 @@ export default function CandidateRankingPage() {
   };
 
   useEffect(() => {
+    setJobsLoading(true);
     getJobs()
       .then((res) => {
         const raw = res.data;
         const jobs = Array.isArray(raw) ? raw : Array.isArray(raw?.jobs) ? raw.jobs : [];
         setJobDescriptions(jobs);
       })
-      .catch((err) => console.error("Failed to load jobs:", err));
+      .catch((err) => console.error("Failed to load jobs:", err))
+      .finally(() => setJobsLoading(false));
   }, []);
 
   const { candidates, meta, loading, error, refetch, updateCandidateLocally } =
@@ -160,8 +163,9 @@ export default function CandidateRankingPage() {
             value={selectedJob}
             onChange={(e) => { setSelectedJob(e.target.value); handleClearFilters(); }}
             className="select-field w-80"
+            disabled={jobsLoading}
           >
-            <option value="">-- Choose a job --</option>
+            <option value="">{jobsLoading ? "Loading jobs..." : "-- Choose a job --"}</option>
             {jobDescriptions.map((job) => (
               <option key={job.id} value={job.id}>{job.title}</option>
             ))}
@@ -252,10 +256,15 @@ export default function CandidateRankingPage() {
             {!loading && candidates.length > 0 && (
               <div className="table-card">
                 <div className="table-card-header">
-                  <h2>
-                    Ranked Candidates
-                    <span className="text-sm text-surface-400 font-normal ml-2">({meta?.total} total)</span>
-                  </h2>
+                  <div>
+                    <h2>
+                      Ranked Candidates
+                      <span className="text-sm text-surface-400 font-normal ml-2">({meta?.total} total)</span>
+                    </h2>
+                    <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 mt-2 inline-block">
+                      💡 For AI Insights, need VPN in Myanmar
+                    </p>
+                  </div>
                   <div className="flex items-center gap-2">
                     <button onClick={() => openBulk("shortlisted")}
                             className="btn-secondary !text-brand-600 !border-brand-200 hover:!bg-brand-50">

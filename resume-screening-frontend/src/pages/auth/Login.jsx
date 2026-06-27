@@ -351,6 +351,10 @@ export default function Login() {
             <span className="w-1.5 h-1.5 rounded-full bg-brand-500" />
             HR: hr@resumescreening.com / asdfasdf
           </p>
+          <p className="flex items-center gap-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-500" />
+            New user can only be created by Admin only.
+          </p>
         </div>
       </div>
     </div>
