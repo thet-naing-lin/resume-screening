@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden">
+    <div className="flex h-screen bg-surface-50 overflow-hidden">
       {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
@@ -16,7 +16,7 @@ export default function DashboardLayout({ children }) {
         <Header onMenuClick={() => setSidebarOpen(true)} />
 
         {/* Page content — scrollable */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-6">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );
