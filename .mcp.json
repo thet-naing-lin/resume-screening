@@ -6,6 +6,14 @@
         "-c",
         "GITHUB_PERSONAL_ACCESS_TOKEN=$(gh auth token) npx -y @modelcontextprotocol/server-github"
       ]
+    },
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp"],
+
+      "env": {
+        "CHROME_DEBUG_URL": "http://localhost:9222"
+      }
     }
   }
 }
