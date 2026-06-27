@@ -1,4 +1,4 @@
-FROM php:8.3-cli-alpine
+FROM php:8.4-cli-alpine
 
 RUN apk add --no-cache \
     bash curl git unzip libzip-dev oniguruma-dev icu-dev \
