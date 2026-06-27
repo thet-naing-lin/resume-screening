@@ -1,291 +1,159 @@
 # Deployment Guide
 
-This guide walks you through deploying the Resume Screening Tool for **free** using:
+## Architecture
 
-| Service | Platform | What |
-|---------|----------|------|
-| Frontend | **Vercel** | React SPA |
-| Backend API | **Render** | Laravel (PHP) |
-| Python Scorer | **Hugging Face Spaces** | Flask NLP microservice |
-| Database | **Railway** | MySQL |
-
----
-
-## Prerequisites
-
-- GitHub account
-- Vercel account (sign up with GitHub)
-- Render account (sign up with GitHub)
-- Hugging Face account (sign up at huggingface.co)
-- Railway account (sign up at railway.app)
-- Google Cloud project (for Gemini API key and optional Google OAuth)
+| Service          | Platform       | Cost                        |
+| ---------------- | -------------- | --------------------------- |
+| Frontend         | Vercel         | Free                        |
+| Backend (Laravel)| Render         | Free (750 hrs/mo)           |
+| Python Scorer    | Hugging Face   | Free (always on)            |
+| Database (MySQL) | Railway        | Free ($5 credit, ~$1-2/mo)  |
+| Email (SendGrid) | SendGrid       | Free (100 emails/day)       |
 
 ---
 
-## Step 1: Railway — MySQL Database
+## Step 1: Deploy Python Scorer to Hugging Face Spaces
 
-1. Go to [railway.app](https://railway.app) and create an account
-2. Click **New Project** → **Provision MySQL**
-3. Once created, click on the MySQL service → **Variables** tab
-4. Copy the connection details — you'll need:
-   - `MYSQL_HOST`
-   - `MYSQL_DATABASE`
-   - `MYSQL_USER`
-   - `MYSQL_PASSWORD`
-   - `MYSQL_PORT` (usually 3306)
-5. Railway databases are publicly accessible by default — no IP allowlist needed
-
-> **Free tier:** $5 credit/month. MySQL typically costs ~$1-2/month. Credit also covers bandwidth and storage.
-
----
-
-## Step 2: Hugging Face Spaces — Python Scorer
-
-1. Go to [huggingface.co](https://huggingface.co) and create an account
-2. Click your profile → **New Space**
-3. Configure:
+1. Create a new Space at [huggingface.co/new-space](https://huggingface.co/new-space)
    - Name: `resume-scorer`
-   - License: MIT
    - SDK: **Docker**
-   - Visibility: Public (or Private, both are free)
-4. Clone the Space repo locally:
+   - Visibility: Public (free)
+
+2. Push the `python-scorer/` folder:
    ```bash
-   git clone https://huggingface.co/spaces/YOUR_USERNAME/resume-scorer
-   ```
-5. Copy these files into the cloned repo:
-   ```bash
-   cp python-scorer/Dockerfile resume-scorer/
-   cp python-scorer/app.py resume-scorer/
-   cp python-scorer/requirements.txt resume-scorer/
-   ```
-6. Push to Hugging Face:
-   ```bash
-   cd resume-scorer
+   cd python-scorer
+   git init
+   git remote add origin https://YOUR_USERNAME:HF_TOKEN@huggingface.co/YOUR_USERNAME/resume-scorer
    git add .
-   git commit -m "Initial deployment"
-   git push
+   git commit -m "Deploy scorer"
+   git push -u origin main
    ```
-7. Wait for the Space to build (~5-10 min, first build downloads PyTorch)
-8. Your scorer URL will be: `https://YOUR_USERNAME-resume-scorer.hf.space`
 
-> **Free tier:** Unlimited, always-on, 16GB RAM, 2 vCPU.
-
-**Test it:**
-```bash
-curl https://YOUR_USERNAME-resume-scorer.hf.space/health
-# Should return: {"status":"ok","model":"all-MiniLM-L6-v2","model_loaded":true}
-```
+3. Note your URL: `https://YOUR_USERNAME-resume-scorer.hf.space`
 
 ---
 
-## Step 3: Render — Laravel Backend API
+## Step 2: Deploy Database to Railway
 
-1. Go to [render.com](https://render.com) and create an account
-2. Click **New** → **Web Service**
-3. Connect your GitHub repo
-4. Configure:
-   - Name: `resume-screening-api`
-   - Region: choose closest to you
-   - Branch: `main`
-   - Root Directory: `resume-screening-api`
-   - Runtime: **Docker**
+1. Create a [Railway](https://railway.app) account
+2. Create a new project → Add MySQL
+3. Go to MySQL → **Networking** → **Public Networking** → Enable
+4. Copy the public connection details:
+   - Host: `mysql.railway.proxy.rlwy.net`
+   - Port: (the port shown)
+   - Database: `railway`
+   - User: `root`
+   - Password: (from Variables tab)
+
+---
+
+## Step 3: Deploy Laravel Backend to Render
+
+1. Push code to GitHub (the main `resume-screening` repo)
+
+2. Create a [Render](https://render.com) account → New Web Service
+   - Connect your GitHub repo
+   - **Root Directory**: `resume-screening-api`
+   - Environment: **Docker**
    - Instance Type: **Free**
-5. Add these **Environment Variables** in the Render dashboard:
 
-   ```
-   APP_NAME=Resume Screening Tool
-   APP_ENV=production
-   APP_KEY=          # Generate with: php artisan key:generate --show
-   APP_DEBUG=false
-   APP_URL=https://resume-screening-api-xxxx.onrender.com
+3. Add Environment Variables:
 
-   DB_CONNECTION=mysql
-   DB_HOST=<MYSQL_HOST from Railway>
-   DB_PORT=3306
-   DB_DATABASE=<MYSQL_DATABASE from Railway>
-   DB_USERNAME=<MYSQL_USER from Railway>
-   DB_PASSWORD=<MYSQL_PASSWORD from Railway>
+   | Key                  | Value                                               |
+   | -------------------- | --------------------------------------------------- |
+   | `APP_KEY`            | base64:... (generate with `php artisan key:generate`) |
+   | `APP_ENV`            | production                                          |
+   | `APP_DEBUG`          | false                                               |
+   | `APP_URL`            | https://your-api.onrender.com                       |
+   | `DB_HOST`            | mysql.railway.proxy.rlwy.net                        |
+   | `DB_PORT`            | (from Railway)                                      |
+   | `DB_DATABASE`        | railway                                             |
+   | `DB_USERNAME`        | root                                                |
+   | `DB_PASSWORD`        | (from Railway)                                      |
+   | `MAIL_MAILER`        | sendgrid                                            |
+   | `SENDGRID_API_KEY`   | SG.xxxxxxxxxxxxxxxxxxxx                             |
+   | `MAIL_FROM_ADDRESS`  | your-verified-email@example.com                     |
+   | `MAIL_FROM_NAME`     | "Resume Screening Tool"                             |
+   | `GEMINI_API_KEY`     | (optional - for AI insights)                        |
+   | `PYTHON_SCORER_URL`  | https://your-username-resume-scorer.hf.space        |
+   | `RUN_DB_SEED`        | true (first deploy only, then set to false)         |
 
-   SESSION_DRIVER=database
-   CACHE_STORE=file
-   QUEUE_CONNECTION=database
-
-   PYTHON_SCORER_URL=https://YOUR_USERNAME-resume-scorer.hf.space
-
-   GEMINI_API_KEY=<your-gemini-api-key>
-   GEMINI_API_URL=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent
-
-   MAIL_MAILER=smtp
-   MAIL_HOST=smtp.gmail.com
-   MAIL_PORT=587
-   MAIL_USERNAME=<your-gmail>
-   MAIL_PASSWORD=<your-gmail-app-password>
-   MAIL_ENCRYPTION=tls
-   MAIL_FROM_ADDRESS=<your-gmail>
-   MAIL_FROM_NAME=Resume Screening Tool
-
-   FRONTEND_URL=https://your-app.vercel.app
-   SANCTUM_STATEFUL_DOMAINS=your-app.vercel.app
-   SESSION_DOMAIN=.onrender.com
-
-   CORS_ALLOWED_ORIGINS=https://your-app.vercel.app
-
-   GOOGLE_CLIENT_ID=<optional>
-   GOOGLE_CLIENT_SECRET=<optional>
-   GOOGLE_REDIRECT_URI=https://resume-screening-api-xxxx.onrender.com/auth/google/callback
-
-   RUN_DB_SEED=true    # Set to true for first deploy only, then false
-   ```
-
-6. Click **Create Web Service**
-7. Wait for build and deploy (~5-10 min)
-8. Your API URL will be: `https://resume-screening-api-xxxx.onrender.com`
-
-> **Free tier:** 750 hours/month, spins down after 15 min of inactivity.
-
-**⚠️ Keep-alive (optional but recommended):**
-Sign up at [UptimeRobot](https://uptimerobot.com) (free) and add a monitor:
-- URL: `https://resume-screening-api-xxxx.onrender.com/api/health` (or just `/`)
-- Interval: 10 minutes
-- This prevents the free tier from spinning down
-
-**Test it:**
-```bash
-curl https://resume-screening-api-xxxx.onrender.com/api/health
-# or
-curl https://resume-screening-api-xxxx.onrender.com/
-```
+4. Deploy and wait ~5-10 minutes
 
 ---
 
-## Step 4: Vercel — Frontend
+## Step 4: Set Up SendGrid (Email)
 
-1. Go to [vercel.com](https://vercel.com) and create an account
-2. Click **Add New** → **Project**
-3. Import your GitHub repo
-4. Configure:
-   - Framework Preset: **Vite**
-   - Root Directory: `resume-screening-frontend`
-   - Build Command: `npm run build` (auto-detected)
-   - Output Directory: `dist` (auto-detected)
-5. Add these **Environment Variables** in the Vercel dashboard:
+SendGrid works on Render's free tier because it uses an API (not SMTP ports).
 
-   ```
-   VITE_API_URL=https://resume-screening-api-xxxx.onrender.com/api
-   VITE_GOOGLE_AUTH_URL=https://resume-screening-api-xxxx.onrender.com/auth/google/redirect
-   ```
+1. Create a [SendGrid](https://sendgrid.com) account (free - 100 emails/day)
+2. **Verify a Single Sender**:
+   - Go to Settings → Sender Authentication → Single Sender Verification
+   - Add your email and verify it
+3. **Create an API Key**:
+   - Go to Settings → API Keys → Create API Key
+   - Give it "Full Access" or "Mail Send" permission
+   - Copy the key (starts with `SG.`)
+4. **Add to Render env vars**:
+   - `MAIL_MAILER=sendgrid`
+   - `SENDGRID_API_KEY=SG.your_key_here`
+   - `MAIL_FROM_ADDRESS=your-verified-email@example.com`
+   - `MAIL_FROM_NAME="Resume Screening Tool"`
 
-6. Click **Deploy**
-7. Your frontend URL will be: `https://your-project.vercel.app`
-
-> **Free tier:** 100 GB bandwidth, unlimited projects, automatic HTTPS.
+> **Note:** `MAIL_FROM_NAME` must be in quotes if it contains spaces.
 
 ---
 
-## Step 5: Post-Deployment
+## Step 5: Deploy Frontend to Vercel
 
-### Update Laravel APP_URL
-After Render gives you your URL, update the `APP_URL` env var in Render dashboard to match.
+1. Create a [Vercel](https://vercel.com) account → New Project
+   - Import your GitHub repo
+   - **Root Directory**: `resume-screening-frontend`
 
-### Google OAuth (Optional)
-If using Google OAuth, update your Google Cloud Console:
-1. Go to **APIs & Services** → **Credentials**
-2. Edit your OAuth 2.0 Client
-3. Add **Authorized redirect URIs**:
-   - `https://resume-screening-api-xxxx.onrender.com/auth/google/callback`
-4. Update `GOOGLE_REDIRECT_URI` in Render env vars
+2. Add Environment Variable:
 
-### Gmail App Password
-If using Gmail for sending emails:
-1. Go to [myaccount.google.com](https://myaccount.google.com) → **Security**
-2. Enable **2-Step Verification** (if not already)
-3. Go to **App passwords** → generate one for "Mail"
-4. Use this 16-character password as `MAIL_PASSWORD` in Render
+   | Key                  | Value                          |
+   | -------------------- | ------------------------------ |
+   | `VITE_API_BASE_URL`  | https://your-api.onrender.com  |
 
-### First Deploy Seed
-On your first deploy, set `RUN_DB_SEED=true` in Render env vars. After the first successful deploy, change it to `false` to avoid re-seeding on every restart.
+3. Deploy
 
 ---
 
-## Architecture Diagram
+## First Deploy Checklist
 
-```
-┌──────────────────┐       ┌──────────────────────┐       ┌──────────────────────────┐
-│   Vercel          │──────▶│   Render              │──────▶│   Hugging Face Spaces     │
-│   (React SPA)     │       │   (Laravel PHP)       │       │   (Python Scorer)         │
-│                   │       │                       │       │                           │
-│  VITE_API_URL ────┼───┐   │  ┌─────────────┐      │       │  ┌─────────────────┐      │
-│                   │   │   │  │ Queue Worker │      │       │  │ TF-IDF Scoring  │      │
-└──────────────────┘   │   │  │ (background) │      │       │  │ Semantic Scoring│      │
-                       │   │  └─────────────┘      │       │  └─────────────────┘      │
-                       │   │                       │       │                           │
-                       │   │  ┌─────────────┐      │       └──────────────────────────┘
-                       │   │  │ Gemini API  │      │
-                       │   │  │ (AI insights)│      │
-                       │   │  └─────────────┘      │
-                       │   │                       │
-                       │   │  ┌─────────────┐      │
-                       └───┼──│ MySQL       │      │
-                           │  │ (Railway)   │      │
-                           │  └─────────────┘      │
-                           │                       │
-                           │  ┌─────────────┐      │
-                           │  │ Gmail SMTP  │      │
-                           │  │ (emails)    │      │
-                           │  └─────────────┘      │
-                           └──────────────────────┘
-```
+- [ ] Python Scorer running on HF Spaces (check `/health`)
+- [ ] MySQL running on Railway with public networking enabled
+- [ ] Backend deployed on Render with all env vars
+- [ ] `RUN_DB_SEED=true` on first deploy, then change to `false`
+- [ ] SendGrid API key set in Render env vars
+- [ ] SendGrid single sender verified
+- [ ] Frontend deployed on Vercel
+- [ ] Update `FRONTEND_URL` in Render to match Vercel URL
+- [ ] Update `VITE_API_BASE_URL` in Vercel to match Render URL
+- [ ] Test login with demo credentials
+
+---
+
+## Free Tier Limits
+
+| Service      | Limit                                    |
+| ------------ | ---------------------------------------- |
+| Vercel       | 100GB bandwidth/mo                       |
+| Render       | 750 hours/mo (sleeps after 15 min idle)  |
+| HF Spaces    | Unlimited (always on)                    |
+| Railway      | $5 credit/mo (~$1-2 for MySQL)           |
+| SendGrid     | 100 emails/day                           |
 
 ---
 
 ## Troubleshooting
 
-### "502 Bad Gateway" on Render
-- Check Render logs → likely a PHP error or missing env var
-- Make sure `APP_KEY` is set (generate with `php artisan key:generate --show`)
-- Make sure Railway MySQL is running and accessible (check Railway dashboard)
-
-### "Connection refused" from backend to Python scorer
-- Verify the HF Space is running (check the Space page)
-- Make sure `PYTHON_SCORER_URL` in Render matches your Space URL exactly
-- Test the scorer directly: `curl https://YOUR_SPACE_URL/health`
-
-### CORS errors in browser
-- Make sure `CORS_ALLOWED_ORIGINS` in Render includes your Vercel URL
-- No trailing slash on URLs
-- Multiple origins separated by commas: `https://app1.vercel.app,https://app2.vercel.app`
-
-### "Table doesn't exist" errors
-- Make sure `RUN_DB_SEED=true` is set for the first deploy
-- Check Render logs for migration output
-
-### Emails not sending
-- Use a Gmail **App Password**, not your regular password
-- Make sure 2-Step Verification is enabled on your Google account
-- Check `MAIL_MAILER=smtp` is set (not `log` or `array`)
-
-### Free tier spin-down on Render
-- Set up UptimeRobot to ping every 10 minutes
-- First request after spin-down takes ~30 seconds — this is normal
-
----
-
-## Updating After Deploy
-
-Push to your `main` branch:
-- **Vercel**: auto-deploys on push
-- **Render**: auto-deploys on push (if connected to GitHub)
-- **Hugging Face**: push to the Space repo to trigger rebuild
-
----
-
-## Costs
-
-| Service | Free Tier | Paid Tier |
-|---------|-----------|-----------|
-| Vercel | 100 GB bandwidth | $20/mo Pro |
-| Render | 750 hrs/month | $7/mo (always-on) |
-| Hugging Face Spaces | Unlimited | $0 |
-| Railway | $5 credit/month | Usage-based |
-
-**Total: $0/month** (Railway's $5 credit covers MySQL at ~$1-2/mo).
+| Problem | Solution |
+| ------- | -------- |
+| Backend sleeps on first request | Render free tier sleeps after 15 min inactivity. First request takes ~30s to wake up. |
+| DB connection fails | Check Railway public networking is enabled and credentials are correct. |
+| Python scorer returns 503 | Check HF Space is running. Visit the Space page to see build logs. |
+| Emails not sending | Verify SendGrid single sender is confirmed and `SENDGRID_API_KEY` is set in Render. |
+| CORS errors | Set `FRONTEND_URL` in Render to match your Vercel URL exactly. |
+| Duplicate seed data | Set `RUN_DB_SEED=false` after first deploy. |
