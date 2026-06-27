@@ -238,14 +238,11 @@ export default function Login() {
           </form>
         </div>
 
-        {/* Demo credentials */}
-        <div className="mt-4 bg-white/5 border border-white/10 rounded-2xl px-5 py-3.5
-                        text-xs text-surface-400 backdrop-blur-sm">
-          <p className="font-semibold text-surface-300 mb-1.5">Demo Credentials</p>
-          <p className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-500" />
-            Admin: admin@resumescreening.com / Admin@12345
-          </p>
+        {/* Demo credentials hint */}
+        <div className="mt-4 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3 text-xs text-blue-700">
+          <p className="font-semibold mb-1">Demo Credentials</p>
+          <p>Admin: admin@resumescreening.com / Admin@12345</p>
+          <p>HR: hr@resumescreening.com / asdfasdf</p>
         </div>
       </div>
     </div>
