@@ -5,6 +5,7 @@ Automated resume screening platform that scores candidates against job descripti
 ## For full commit history
 
 Frontend - https://github.com/thet-naing-lin/resume-screening-frontend
+
 Backend - https://github.com/thet-naing-lin/resume-screening-api
 
 ## Architecture
