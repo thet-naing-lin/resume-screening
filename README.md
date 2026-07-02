@@ -23,6 +23,24 @@ The weighted final score is normalised to 0–100.
 
 AI insights (candidate summaries and interview questions) are generated via the Google Gemini API.
 
+## Screenshots
+
+| Login | Dashboard | Job Listings |
+|-------|-----------|--------------|
+| ![Login](screenshots/01-login-page.png) | ![Dashboard](screenshots/02-dashboard.png) | ![Job Listings](screenshots/03-jobs.png) |
+
+| Create Job | Resume List | Upload Resumes |
+|------------|-------------|----------------|
+| ![Create Job](screenshots/04-jobs-create.png) | ![Resume List](screenshots/05-resumes.png) | ![Upload Resumes](screenshots/06-resumes-upload.png) |
+
+| Candidate Rankings | Reports | User Management |
+|--------------------|---------|-----------------|
+| ![Candidate Rankings](screenshots/07-candidate-rankings.png) | ![Reports](screenshots/08-reports.png) | ![User Management](screenshots/09-admin-users.png) |
+
+| Audit Logs | Forgot Password |
+|------------|-----------------|
+| ![Audit Logs](screenshots/10-admin-audit-logs.png) | ![Forgot Password](screenshots/11-forgot-password.png) |
+
 ## Features
 
 - Token-based authentication with Sanctum
