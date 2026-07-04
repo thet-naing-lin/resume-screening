@@ -1,9 +1,12 @@
 // src/pages/candidates/ResumeList.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import DeleteModal from "../../components/common/DeleteModal";
 import { getResumes, deleteResume } from "../../api/resumeApi";
+
+const PROCESSING_STATUSES = ["uploaded", "parsing", "parsed", "scoring"];
+const POLL_INTERVAL_MS = 3000;
 
 const statusConfig = {
   uploaded: { label: "Uploaded", style: "bg-surface-100 text-surface-600 border-surface-200" },
@@ -18,33 +21,36 @@ const DELETABLE = ["uploaded", "failed"];
 
 function StatusBadge({ status }) {
   const cfg = statusConfig[status] || statusConfig.uploaded;
+  const isActive = PROCESSING_STATUSES.includes(status);
   return (
-    <span className={`badge border ${cfg.style}`}>{cfg.label}</span>
+    <span className={`badge border ${cfg.style}`}>
+      {isActive && (
+        <span className="relative flex h-2 w-2 mr-1.5">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-current opacity-40" />
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-current" />
+        </span>
+      )}
+      {cfg.label}
+    </span>
   );
 }
 
 export default function ResumeList() {
   const [resumes, setResumes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [error, setError] = useState("");
   const [flash, setFlash] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [search, setSearch] = useState("");
   const [filterJob, setFilterJob] = useState("all");
+  const [completedCount, setCompletedCount] = useState(null); // for completion toast
+  const initialLoadDone = useRef(false);
+  const batchProcessingRef = useRef(new Set()); // track resume IDs being processed in current batch
 
-  useEffect(() => { fetchResumes(); }, []);
-
-  useEffect(() => {
-    if (flash) {
-      const t = setTimeout(() => setFlash(""), 3000);
-      return () => clearTimeout(t);
-    }
-  }, [flash]);
-
-  async function fetchResumes() {
+  const fetchResumes = useCallback(async () => {
     try {
-      setLoading(true);
+      if (!initialLoadDone.current) setInitialLoading(true);
       const res = await getResumes();
       const raw = res.data?.data ?? res.data ?? [];
       const data = Array.isArray(raw) ? raw : Object.values(raw);
@@ -52,9 +58,51 @@ export default function ResumeList() {
     } catch (err) {
       setError(err.response?.data?.message ?? "Failed to load resumes.");
     } finally {
-      setLoading(false);
+      setInitialLoading(false);
+      initialLoadDone.current = true;
     }
-  }
+  }, []);
+
+  // Initial fetch
+  useEffect(() => { fetchResumes(); }, [fetchResumes]);
+
+  // Auto-polling: refetch every 3s while resumes are processing
+  useEffect(() => {
+    const activeIds = new Set(
+      resumes.filter((r) => PROCESSING_STATUSES.includes(r.status)).map((r) => r.id)
+    );
+
+    // Track the batch: when new processing resumes appear, record them
+    activeIds.forEach((id) => batchProcessingRef.current.add(id));
+
+    if (activeIds.size === 0 || !initialLoadDone.current) return;
+
+    const interval = setInterval(fetchResumes, POLL_INTERVAL_MS);
+    return () => clearInterval(interval);
+  }, [resumes, fetchResumes]);
+
+  // Detect when all processing resumes finish → show completion toast
+  const prevActiveRef = useRef(0);
+  useEffect(() => {
+    const activeCount = resumes.filter((r) => PROCESSING_STATUSES.includes(r.status)).length;
+    const prevActive = prevActiveRef.current;
+
+    // If we had active resumes before and now have none → batch just completed
+    if (prevActive > 0 && activeCount === 0 && initialLoadDone.current) {
+      setCompletedCount(batchProcessingRef.current.size);
+      batchProcessingRef.current.clear();
+      const t = setTimeout(() => setCompletedCount(null), 5000);
+      return () => clearTimeout(t);
+    }
+    prevActiveRef.current = activeCount;
+  }, [resumes]);
+
+  useEffect(() => {
+    if (flash) {
+      const t = setTimeout(() => setFlash(""), 3000);
+      return () => clearTimeout(t);
+    }
+  }, [flash]);
 
   async function handleDelete() {
     setDeleteLoading(true);
@@ -114,6 +162,35 @@ export default function ResumeList() {
           </div>
         )}
 
+        {/* Processing banner — shows while resumes are being scored */}
+        {!initialLoading && resumes.some((r) => PROCESSING_STATUSES.includes(r.status)) && (
+          <div className="flex items-center gap-3 bg-brand-50 border border-brand-200 text-brand-700
+                          text-sm px-5 py-3 rounded-2xl mb-4">
+            <svg className="w-5 h-5 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            <span>
+              Processing resumes… Status updates automatically every few seconds.
+            </span>
+          </div>
+        )}
+
+        {/* Completion toast */}
+        {completedCount !== null && (
+          <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 text-emerald-700
+                          text-sm px-5 py-3 rounded-2xl mb-4 animate-fade-in">
+            <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
+            <span className="flex-1">
+              All done! {completedCount} resume{completedCount !== 1 ? "s" : ""} scored.
+            </span>
+            <button onClick={() => setCompletedCount(null)} className="font-bold ml-2">✕</button>
+          </div>
+        )}
+
         {/* Search + Filter bar */}
         <div className="filter-bar">
           <div className="search-input-wrapper">
@@ -151,7 +228,7 @@ export default function ResumeList() {
             <span className="text-sm text-surface-400">{filtered.length} results</span>
           </div>
 
-          {loading && (
+          {initialLoading && (
             <div className="p-6 space-y-4">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="animate-pulse flex gap-4 items-center">
@@ -166,7 +243,7 @@ export default function ResumeList() {
             </div>
           )}
 
-          {!loading && filtered.length === 0 && !error && (
+          {!initialLoading && filtered.length === 0 && !error && (
             <div className="py-16 text-center">
               <p className="text-4xl mb-4">{search || filterJob !== "all" ? "🔍" : "📄"}</p>
               <p className="font-semibold text-surface-500">
@@ -185,7 +262,7 @@ export default function ResumeList() {
             </div>
           )}
 
-          {!loading && filtered.length > 0 && (
+          {!initialLoading && filtered.length > 0 && (
             <div className="overflow-x-auto table-container">
               <table>
                 <thead>

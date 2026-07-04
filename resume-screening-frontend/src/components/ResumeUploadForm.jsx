@@ -1,5 +1,6 @@
 // src/components/ResumeUploadForm.jsx
 import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
 import { getJobs } from "../api/jobApi";
 import { uploadResumes } from "../api/resumeApi";
 
@@ -106,6 +107,8 @@ export default function ResumeUploadForm() {
 
   // ── RESULTS STATE ─────────────────────────────────────────────
   if (results) {
+    const uploadedCount = results.uploaded?.length ?? 0;
+
     return (
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
@@ -118,10 +121,28 @@ export default function ResumeUploadForm() {
           <h2 className="text-lg font-bold text-surface-900">{results.message}</h2>
         </div>
 
-        {results.uploaded.length > 0 && (
+        {/* Processing notice */}
+        {uploadedCount > 0 && (
+          <div className="flex items-center gap-3 bg-brand-50 border border-brand-200 text-brand-700
+                          text-sm px-5 py-4 rounded-2xl mb-5">
+            <svg className="w-5 h-5 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+              <path className="opacity-75" fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+            </svg>
+            <div className="flex-1">
+              <p className="font-semibold">Resumes are being processed</p>
+              <p className="text-brand-600 text-xs mt-0.5">
+                Status updates automatically — no refresh needed.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {uploadedCount > 0 && (
           <div className="mb-4">
             <p className="text-xs font-semibold text-surface-400 uppercase tracking-wider mb-2">
-              Uploaded ({results.uploaded.length})
+              Uploaded ({uploadedCount})
             </p>
             <div className="space-y-2">
               {results.uploaded.map((r) => (
@@ -158,9 +179,21 @@ export default function ResumeUploadForm() {
           </div>
         )}
 
-        <button onClick={() => setResults(null)} className="btn-primary w-full justify-center mt-6">
-          Upload More
-        </button>
+        <div className="flex gap-3 mt-6">
+          {uploadedCount > 0 && (
+            <Link to="/resumes" className="btn-primary flex-1 justify-center">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              View & Track Progress
+            </Link>
+          )}
+          <button onClick={() => setResults(null)}
+                  className={`btn-secondary justify-center ${uploadedCount === 0 ? "w-full" : "flex-1"}`}>
+            Upload More
+          </button>
+        </div>
       </div>
     );
   }
