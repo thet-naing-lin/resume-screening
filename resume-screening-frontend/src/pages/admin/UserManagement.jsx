@@ -188,21 +188,25 @@ export default function UserManagement() {
                       <td className="text-surface-500">{user.email}</td>
                       <td><RoleBadge role={user.role} /></td>
                       <td>
-                        <select
-                          value={user.role}
-                          disabled={roleLoading === user.id}
-                          onChange={(e) => handleRoleChange(user, e.target.value)}
-                          className="text-sm border border-surface-200 rounded-xl px-3 py-1.5 bg-white
-                                     text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-500/30
-                                     disabled:opacity-50"
-                        >
-                          {roles.map((role) => (
-                            <option key={role} value={role}>{ROLE_LABEL[role] ?? role}</option>
-                          ))}
-                        </select>
-                        {roleLoading === user.id && (
-                          <span className="ml-2 text-xs text-surface-400">Saving...</span>
-                        )}
+                        <div className="relative">
+                          <select
+                            value={user.role}
+                            disabled={roleLoading === user.id}
+                            onChange={(e) => handleRoleChange(user, e.target.value)}
+                            className="text-sm border border-surface-200 rounded-xl px-3 py-1.5 bg-white
+                                       text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-500/30
+                                       disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {roles.map((role) => (
+                              <option key={role} value={role}>{ROLE_LABEL[role] ?? role}</option>
+                            ))}
+                          </select>
+                          {roleLoading === user.id && (
+                            <div className="absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none">
+                              <div className="w-4 h-4 border-[2px] border-brand-500 border-t-transparent rounded-full animate-spin" />
+                            </div>
+                          )}
+                        </div>
                       </td>
                       <td className="text-surface-400">{user.created_at}</td>
                       <td className="text-right">
