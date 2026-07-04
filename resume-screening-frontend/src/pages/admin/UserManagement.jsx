@@ -144,16 +144,36 @@ export default function UserManagement() {
           </div>
 
           {loading ? (
-            <div className="p-6 space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-4 animate-pulse">
-                  <div className="w-10 h-10 rounded-xl bg-surface-100" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-surface-100 rounded w-1/4" />
-                    <div className="h-3 bg-surface-100 rounded w-1/3" />
-                  </div>
-                </div>
-              ))}
+            <div className="animate-pulse overflow-x-auto table-container">
+              <table>
+                <thead>
+                  <tr>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-12" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-14" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-20" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-20" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-14" /></th>
+                    <th className="text-right"><div className="h-3 bg-surface-100 rounded w-14 ml-auto" /></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[1, 2, 3].map((i) => (
+                    <tr key={i}>
+                      <td>
+                        <div className="flex items-center gap-3">
+                          <div className="w-9 h-9 bg-surface-100 rounded-xl flex-shrink-0" />
+                          <div className="h-4 bg-surface-100 rounded w-28" />
+                        </div>
+                      </td>
+                      <td><div className="h-4 bg-surface-100 rounded w-36" /></td>
+                      <td><div className="h-6 bg-surface-100 rounded-full w-16" /></td>
+                      <td><div className="h-8 bg-surface-100 rounded-xl w-24" /></td>
+                      <td><div className="h-4 bg-surface-100 rounded w-20" /></td>
+                      <td className="text-right"><div className="h-8 bg-surface-100 rounded-xl w-14 ml-auto" /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           ) : users.length === 0 ? (
             <div className="py-16 text-center">

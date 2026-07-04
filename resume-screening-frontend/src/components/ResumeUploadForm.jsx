@@ -189,22 +189,19 @@ export default function ResumeUploadForm() {
           <label htmlFor="job_id" className="block text-sm font-medium text-surface-700 mb-1.5">
             Job Position <span className="text-red-500">*</span>
           </label>
-          {jobsLoading ? (
-            <div className="h-10 bg-surface-100 rounded-2xl animate-pulse" />
-          ) : (
-            <select
-              id="job_id"
-              value={jobId}
-              onChange={(e) => setJobId(e.target.value)}
-              required
-              className="select-field w-full"
-            >
-              <option value="">— Select a job position —</option>
-              {jobs.map((job) => (
-                <option key={job.id} value={job.id}>{job.title}</option>
-              ))}
-            </select>
-          )}
+          <select
+            id="job_id"
+            value={jobId}
+            onChange={(e) => setJobId(e.target.value)}
+            required
+            disabled={jobsLoading}
+            className="select-field w-full"
+          >
+            <option value="">{jobsLoading ? "Loading jobs..." : "— Select a job position —"}</option>
+            {jobs.map((job) => (
+              <option key={job.id} value={job.id}>{job.title}</option>
+            ))}
+          </select>
           {fieldErrors.job_description_id && (
             <p className="text-red-500 text-xs mt-1">{fieldErrors.job_description_id[0]}</p>
           )}
