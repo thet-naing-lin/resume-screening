@@ -225,13 +225,12 @@ export default function CandidateRankingPage() {
 
             {/* Loading */}
             {loading && (
-              <div className="bg-white rounded-3xl border border-surface-200 p-12 text-center shadow-card">
+              <div className="bg-white rounded-3xl border border-surface-200 p-12 shadow-card">
                 <div className="animate-pulse space-y-4">
                   {[1, 2, 3].map((i) => (
                     <div key={i} className="h-12 bg-surface-100 rounded-2xl" />
                   ))}
                 </div>
-                <p className="text-surface-400 text-sm mt-4">Loading rankings...</p>
               </div>
             )}
 

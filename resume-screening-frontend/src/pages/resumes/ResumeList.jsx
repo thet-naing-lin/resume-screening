@@ -201,17 +201,38 @@ export default function ResumeList() {
           </div>
 
           {initialLoading && (
-            <div className="p-6 space-y-4">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="animate-pulse flex gap-4 items-center">
-                  <div className="h-10 w-10 bg-surface-100 rounded-xl flex-shrink-0" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-surface-100 rounded w-48" />
-                    <div className="h-3 bg-surface-100 rounded w-32" />
-                  </div>
-                  <div className="h-6 w-20 bg-surface-100 rounded-full" />
-                </div>
-              ))}
+            <div className="overflow-x-auto table-container animate-pulse">
+              <table>
+                <thead>
+                  <tr>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-12" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-24" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-20" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-14" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-16" /></th>
+                    <th className="text-left"><div className="h-3 bg-surface-100 rounded w-10" /></th>
+                    <th className="text-right"><div className="h-3 bg-surface-100 rounded w-16 ml-auto" /></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[1, 2, 3, 4].map((i) => (
+                    <tr key={i}>
+                      <td>
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 bg-surface-100 rounded-xl flex-shrink-0" />
+                          <div className="h-4 bg-surface-100 rounded w-32" />
+                        </div>
+                      </td>
+                      <td><div className="h-4 bg-surface-100 rounded w-28" /></td>
+                      <td><div className="h-4 bg-surface-100 rounded w-24" /></td>
+                      <td><div className="h-6 bg-surface-100 rounded-full w-20" /></td>
+                      <td><div className="h-4 bg-surface-100 rounded w-20" /></td>
+                      <td><div className="h-4 bg-surface-100 rounded w-12" /></td>
+                      <td className="text-right"><div className="h-8 bg-surface-100 rounded-xl w-16 ml-auto" /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
 

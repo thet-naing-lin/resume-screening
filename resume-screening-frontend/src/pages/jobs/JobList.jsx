@@ -113,42 +113,63 @@ export default function JobList() {
         )}
 
         {/* Stat Cards */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          {[
-            { label: "Total Jobs", value: jobs.length, accent: "text-surface-900", bg: "bg-surface-50" },
-            { label: "Active", value: activeCount, accent: "text-emerald-600", bg: "bg-emerald-50" },
-            { label: "Closed", value: closedCount, accent: "text-red-500", bg: "bg-red-50" },
-          ].map((s) => (
-            <div key={s.label} className="stat-card">
-              <p className={`text-[28px] font-bold ${s.accent} tracking-tight`}>{s.value}</p>
-              <p className="text-sm text-surface-500 mt-1">{s.label}</p>
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <div className="grid grid-cols-3 gap-4 mb-6 animate-pulse">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="stat-card">
+                <div className="h-8 bg-surface-100 rounded-lg w-16 mb-2" />
+                <div className="h-4 bg-surface-100 rounded w-20" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            {[
+              { label: "Total Jobs", value: jobs.length, accent: "text-surface-900", bg: "bg-surface-50" },
+              { label: "Active", value: activeCount, accent: "text-emerald-600", bg: "bg-emerald-50" },
+              { label: "Closed", value: closedCount, accent: "text-red-500", bg: "bg-red-50" },
+            ].map((s) => (
+              <div key={s.label} className="stat-card">
+                <p className={`text-[28px] font-bold ${s.accent} tracking-tight`}>{s.value}</p>
+                <p className="text-sm text-surface-500 mt-1">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {/* Search + Filter bar */}
-        <div className="filter-bar">
-          <div className="search-input-wrapper">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-            </svg>
-            <input
-              type="text"
-              placeholder="Search by title or location..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
+        {loading ? (
+          <div className="filter-bar mb-6 animate-pulse">
+            <div className="search-input-wrapper flex-1">
+              <div className="h-4 w-4 bg-surface-200 rounded flex-shrink-0" />
+              <div className="h-4 bg-surface-100 rounded w-48" />
+            </div>
+            <div className="h-10 bg-surface-100 rounded-xl w-32" />
           </div>
-          <select
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
-            className="select-field"
-          >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="closed">Closed</option>
-          </select>
-        </div>
+        ) : (
+          <div className="filter-bar">
+            <div className="search-input-wrapper">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
+              </svg>
+              <input
+                type="text"
+                placeholder="Search by title or location..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <select
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value)}
+              className="select-field"
+            >
+              <option value="all">All Status</option>
+              <option value="active">Active</option>
+              <option value="closed">Closed</option>
+            </select>
+          </div>
+        )}
 
         {/* Table */}
         <div className="table-card">
@@ -158,16 +179,60 @@ export default function JobList() {
           </div>
 
           {loading ? (
-            <div className="p-6 space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse flex gap-4 items-center">
-                  <div className="h-10 w-10 bg-surface-100 rounded-xl flex-shrink-0" />
-                  <div className="flex-1 space-y-2">
-                    <div className="h-4 bg-surface-100 rounded w-1/3" />
-                    <div className="h-3 bg-surface-100 rounded w-1/4" />
-                  </div>
-                </div>
-              ))}
+            <div className="animate-pulse">
+              <div className="overflow-x-auto table-container">
+                <table>
+                  <thead>
+                    <tr>
+                      <th className="text-left">Job Title</th>
+                      <th className="text-left">Skills</th>
+                      <th className="text-left">Level</th>
+                      <th className="text-left">Type</th>
+                      <th className="text-left">Exp. Years</th>
+                      <th className="text-left">Status</th>
+                      <th className="text-left">Created</th>
+                      <th className="text-center">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <tr key={i}>
+                        {/* Job Title */}
+                        <td>
+                          <div className="h-4 bg-surface-100 rounded w-32 mb-1.5" />
+                          <div className="h-3 bg-surface-100 rounded w-24" />
+                        </td>
+                        {/* Skills */}
+                        <td>
+                          <div className="flex gap-1">
+                            <div className="h-5 bg-surface-100 rounded-lg w-14" />
+                            <div className="h-5 bg-surface-100 rounded-lg w-16" />
+                            <div className="h-5 bg-surface-100 rounded-lg w-12" />
+                          </div>
+                        </td>
+                        {/* Level */}
+                        <td><div className="h-6 bg-surface-100 rounded-full w-16" /></td>
+                        {/* Type */}
+                        <td><div className="h-6 bg-surface-100 rounded-full w-20" /></td>
+                        {/* Exp. Years */}
+                        <td><div className="h-4 bg-surface-100 rounded w-10" /></td>
+                        {/* Status */}
+                        <td><div className="h-6 bg-surface-100 rounded-full w-14" /></td>
+                        {/* Created */}
+                        <td><div className="h-3 bg-surface-100 rounded w-20" /></td>
+                        {/* Actions */}
+                        <td>
+                          <div className="flex items-center justify-end gap-1.5">
+                            <div className="h-8 w-8 bg-surface-100 rounded-xl" />
+                            <div className="h-8 w-8 bg-surface-100 rounded-xl" />
+                            <div className="h-8 w-8 bg-surface-100 rounded-xl" />
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-16 text-center">

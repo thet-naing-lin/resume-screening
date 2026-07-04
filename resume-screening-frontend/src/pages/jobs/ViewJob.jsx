@@ -45,8 +45,92 @@ export default function ViewJob() {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="flex justify-center items-center h-64">
-          <div className="w-10 h-10 border-[3px] border-brand-500 border-t-transparent rounded-full animate-spin" />
+        <div className="max-w-4xl mx-auto animate-pulse">
+          {/* Back button skeleton */}
+          <div className="inline-flex items-center gap-1.5 mb-5">
+            <div className="w-4 h-4 bg-surface-200 rounded" />
+            <div className="h-4 bg-surface-200 rounded w-40" />
+          </div>
+
+          {/* Header card skeleton */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-brand-600 via-brand-500 to-brand-700
+                          p-6 md:p-8 mb-6 shadow-xl shadow-brand-500/20">
+            <div className="absolute top-0 right-0 w-40 h-40 bg-white/5 rounded-full -translate-y-1/2 translate-x-1/4" />
+            <div className="absolute bottom-0 left-1/2 w-24 h-24 bg-white/5 rounded-full translate-y-1/3" />
+
+            <div className="relative flex items-start justify-between gap-4 flex-wrap">
+              <div>
+                <div className="h-8 bg-white/20 rounded-xl w-2/3 md:w-3/4" />
+                <div className="flex items-center gap-1.5 mt-3">
+                  <div className="w-4 h-4 bg-white/15 rounded" />
+                  <div className="h-4 bg-white/15 rounded w-40" />
+                </div>
+                <div className="flex flex-wrap gap-2 mt-4">
+                  <div className="h-6 bg-white/15 rounded-full w-20" />
+                  <div className="h-6 bg-white/15 rounded-full w-24" />
+                  <div className="h-6 bg-white/15 rounded-full w-16" />
+                </div>
+              </div>
+              <div className="h-10 bg-white/15 rounded-2xl w-20 shrink-0" />
+            </div>
+
+            <div className="relative flex flex-wrap gap-x-8 gap-y-1 mt-6 pt-5 border-t border-white/10">
+              <div className="h-3 bg-white/10 rounded w-36" />
+              <div className="h-3 bg-white/10 rounded w-32" />
+              <div className="h-3 bg-white/10 rounded w-32" />
+            </div>
+          </div>
+
+          {/* Two-column details skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Description */}
+            <div className="lg:col-span-2 bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8">
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-1.5 h-5 bg-brand-500 rounded-full" />
+                <div className="h-5 bg-surface-200 rounded w-32" />
+              </div>
+              <div className="space-y-2.5">
+                <div className="h-4 bg-surface-100 rounded w-full" />
+                <div className="h-4 bg-surface-100 rounded w-full" />
+                <div className="h-4 bg-surface-100 rounded w-3/4" />
+                <div className="h-4 bg-surface-100 rounded w-5/6" />
+                <div className="h-4 bg-surface-100 rounded w-2/3" />
+                <div className="h-4 bg-surface-100 rounded w-4/5" />
+              </div>
+            </div>
+
+            {/* Sidebar */}
+            <div className="space-y-6">
+              {/* Skills */}
+              <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="w-1.5 h-5 bg-brand-500 rounded-full" />
+                  <div className="h-5 bg-surface-200 rounded w-28" />
+                  <div className="h-4 bg-surface-100 rounded w-5" />
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  <div className="h-7 bg-brand-50 rounded-xl w-16 border border-brand-100" />
+                  <div className="h-7 bg-brand-50 rounded-xl w-20 border border-brand-100" />
+                  <div className="h-7 bg-brand-50 rounded-xl w-14 border border-brand-100" />
+                  <div className="h-7 bg-brand-50 rounded-xl w-24 border border-brand-100" />
+                  <div className="h-7 bg-brand-50 rounded-xl w-18 border border-brand-100" />
+                </div>
+              </div>
+
+              {/* Qualification */}
+              <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-1.5 h-5 bg-brand-500 rounded-full" />
+                  <div className="h-5 bg-surface-200 rounded w-36" />
+                </div>
+                <div className="space-y-2.5">
+                  <div className="h-4 bg-surface-100 rounded w-full" />
+                  <div className="h-4 bg-surface-100 rounded w-3/4" />
+                  <div className="h-4 bg-surface-100 rounded w-5/6" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </DashboardLayout>
     );
