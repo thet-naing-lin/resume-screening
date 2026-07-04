@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { createJob } from "../../api/jobApi";
 import { SkillTagInput } from "../../components/jobs/JobFormFields";
@@ -34,7 +35,6 @@ export default function CreateJob() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [submitErr, setSubmitErr] = useState("");
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -54,7 +54,6 @@ export default function CreateJob() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitErr("");
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -65,12 +64,13 @@ export default function CreateJob() {
       await createJob(form);
       setForm(EMPTY_FORM);
       setErrors({});
-      navigate("/jobs", { state: { flash: "Job description created successfully!" } });
+      toast.success("Job description created successfully!");
+      navigate("/jobs");
     } catch (err) {
       if (err.response?.status === 422) {
         setErrors(err.response.data.errors ?? {});
       } else {
-        setSubmitErr(err.response?.data?.message ?? "Something went wrong.");
+        toast.error(err.response?.data?.message ?? "Something went wrong.");
       }
     } finally {
       setLoading(false);
@@ -98,12 +98,6 @@ export default function CreateJob() {
             Fields marked <span className="text-red-500">*</span> are required.
           </p>
         </div>
-
-        {submitErr && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-2xl">
-            {submitErr}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8 space-y-6">
           <Field label="Job Title" required error={errors.title}>

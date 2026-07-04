@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/dashboard/Dashboard";
@@ -33,6 +34,25 @@ const PlaceholderPage = ({ title }) => (
 export default function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            borderRadius: "16px",
+            background: "#fff",
+            color: "#334155",
+            fontSize: "14px",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.12)",
+          },
+          success: {
+            iconTheme: { primary: "#10b981", secondary: "#fff" },
+          },
+          error: {
+            iconTheme: { primary: "#ef4444", secondary: "#fff" },
+          },
+        }}
+      />
       <Routes>
         {/* Public */}
         <Route path="/login" element={<Login />} />

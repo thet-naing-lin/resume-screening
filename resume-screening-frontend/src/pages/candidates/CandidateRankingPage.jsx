@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs } from "../../api/jobApi";
 import { useRankings } from "../../hooks/useRankings";
@@ -60,7 +61,6 @@ export default function CandidateRankingPage() {
 
   const [aiTarget, setAiTarget] = useState(null);
   const [exporting, setExporting] = useState(false);
-  const [exportError, setExportError] = useState(null);
   const [mailTarget, setMailTarget] = useState(null);
 
   const [bulkStatus, setBulkStatus] = useState(null);
@@ -69,7 +69,6 @@ export default function CandidateRankingPage() {
 
   const handleExport = async () => {
     setExporting(true);
-    setExportError(null);
     try {
       const response = await exportRankingsCsv({
         job_description_id: selectedJob,
@@ -88,7 +87,7 @@ export default function CandidateRankingPage() {
       link.remove();
       window.URL.revokeObjectURL(url);
     } catch {
-      setExportError("Export failed. Please check your connection and try again.");
+      toast.error("Export failed. Please check your connection and try again.");
     } finally {
       setExporting(false);
     }
@@ -122,7 +121,7 @@ export default function CandidateRankingPage() {
     try {
       await updateCandidateStatus(resumeId, newStatus);
     } catch {
-      alert("Failed to update status. Reverting...");
+      toast.error("Failed to update status. Reverting...");
       refetch();
     } finally {
       setUpdatingId(null);
@@ -236,11 +235,6 @@ export default function CandidateRankingPage() {
               </div>
             )}
 
-            {/* Error */}
-            {error && (
-              <div className="flash-error">{error}</div>
-            )}
-
             {/* Empty state */}
             {!loading && !error && candidates.length === 0 && (
               <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card">
@@ -289,12 +283,6 @@ export default function CandidateRankingPage() {
                     </button>
                   </div>
                 </div>
-
-                {exportError && (
-                  <div className="mx-6 mt-3 flash-error">{exportError}
-                    <button onClick={() => setExportError(null)} className="ml-4 text-red-400 hover:text-red-600 font-bold">✕</button>
-                  </div>
-                )}
 
                 <div className="overflow-x-auto table-container">
                   <table>

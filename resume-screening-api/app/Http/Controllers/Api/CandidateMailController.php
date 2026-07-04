@@ -23,7 +23,7 @@ class CandidateMailController extends Controller
             'job_title'      => 'required|string',
         ]);
 
-        $name     = $request->candidate_name;
+        $name     = $request->filled('candidate_name') ? $request->candidate_name : 'Candidate';
         $job      = $request->job_title;
         $company  = config('app.name', 'Our Company');
 
@@ -85,17 +85,19 @@ HR Team
         // Use HR's corrected email if provided, fallback to stored one
         $recipientEmail = $request->filled('to_email')
             ? $request->to_email
-            : $candidate->email;
+            : ($candidate->email ?? null);
 
         if (!$recipientEmail) {
             return response()->json([
-                'message' => 'No email address provided.',
+                'message' => 'No email address available for this candidate.',
             ], 422);
         }
 
+        $candidateName = $candidate->name ?? 'Candidate';
+
         $mailable = $request->type === 'interview'
-            ? new InterviewInvitationMail($request->subject, $request->body, $candidate->name)
-            : new RejectionNoticeMail($request->subject, $request->body, $candidate->name);
+            ? new InterviewInvitationMail($request->subject, $request->body, $candidateName)
+            : new RejectionNoticeMail($request->subject, $request->body, $candidateName);
 
         Mail::to($recipientEmail)->send($mailable);
 
@@ -156,7 +158,7 @@ HR Team
 
         if ($resumes->isEmpty()) {
             return response()->json([
-                'message' => 'No candidates found with status: ' . $request->status,
+                'message' => 'No ' . $request->status . ' candidates found for the selected job. Try selecting a different position or check that resumes have been scored.',
             ], 404);
         }
 
@@ -172,18 +174,20 @@ HR Team
             if (!$recipientEmail) {
                 $failed[] = [
                     'resume_id'      => $resume->id,
-                    'candidate_name' => $candidate?->name ?? 'Unknown',
-                    'reason'         => 'No email on record',
+                    'candidate_name' => $candidate?->name ?? 'Candidate',
+                    'reason'         => 'No email address on record',
                 ];
                 continue;
             }
+
+            $candidateName = $candidate->name ?? 'Candidate';
 
             try {
                 $type = $request->status === 'shortlisted' ? 'interview' : 'rejection';
 
                 $mailable = $type === 'interview'
-                    ? new InterviewInvitationMail($request->subject, $request->body, $candidate->name)
-                    : new RejectionNoticeMail($request->subject, $request->body, $candidate->name);
+                    ? new InterviewInvitationMail($request->subject, $request->body, $candidateName)
+                    : new RejectionNoticeMail($request->subject, $request->body, $candidateName);
 
                 // Delay to avoid Mailtrap rate limit
                 if ($index > 0) {
@@ -197,20 +201,20 @@ HR Team
                     'to'             => $recipientEmail,
                     'original_email' => $candidate->email,
                     'corrected'      => $recipientEmail !== $candidate->email,
-                    'candidate_name' => $candidate->name,
+                    'candidate_name' => $candidateName,
                     'subject'        => $request->subject,
                     'bulk'           => true,
                 ]);
 
                 $sent[] = [
                     'resume_id'      => $resume->id,
-                    'candidate_name' => $candidate->name,
-                    'email'          => $recipientEmail,   // show actual email sent to
+                    'candidate_name' => $candidateName,
+                    'email'          => $recipientEmail,
                 ];
             } catch (\Exception $e) {
                 $failed[] = [
                     'resume_id'      => $resume->id,
-                    'candidate_name' => $candidate?->name ?? 'Unknown',
+                    'candidate_name' => $candidate?->name ?? 'Candidate',
                     'reason'         => $e->getMessage(),
                 ];
             }
@@ -247,7 +251,7 @@ HR Team
 
         $recipients = $resumes->map(fn($resume) => [
             'resume_id'      => $resume->id,
-            'candidate_name' => $resume->candidate?->name ?? 'Unknown',
+            'candidate_name' => $resume->candidate?->name ?? 'Candidate',
             'stored_email'   => $resume->candidate?->email ?? null,
             'override_email' => null, // HR can fill this in frontend
         ]);

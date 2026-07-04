@@ -1,6 +1,7 @@
 // src/components/ResumeUploadForm.jsx
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import toast from "react-hot-toast";
 import { getJobs } from "../api/jobApi";
 import { uploadResumes } from "../api/resumeApi";
 
@@ -11,7 +12,6 @@ export default function ResumeUploadForm() {
   const [loading, setLoading] = useState(false);
   const [jobsLoading, setJobsLoading] = useState(true);
   const [results, setResults] = useState(null);
-  const [error, setError] = useState("");
   const [fieldErrors, setFieldErrors] = useState({});
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef(null);
@@ -19,7 +19,7 @@ export default function ResumeUploadForm() {
   useEffect(() => {
     getJobs()
       .then((res) => setJobs(res.data.jobs))
-      .catch(() => setError("Could not load job list. Please refresh."))
+      .catch(() => toast.error("Could not load job list. Please refresh."))
       .finally(() => setJobsLoading(false));
   }, []);
 
@@ -80,7 +80,6 @@ export default function ResumeUploadForm() {
       return;
     }
 
-    setError("");
     setResults(null);
     setFieldErrors({});
     setLoading(true);
@@ -92,13 +91,14 @@ export default function ResumeUploadForm() {
     try {
       const res = await uploadResumes(formData);
       setResults(res.data);
+      toast.success("Resumes uploaded successfully!");
       setFiles([]);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (err) {
       if (err.response?.status === 422) {
         setFieldErrors(err.response.data.errors || {});
       } else {
-        setError("Upload failed. Please try again.");
+        toast.error("Upload failed. Please try again.");
       }
     } finally {
       setLoading(false);
@@ -120,24 +120,6 @@ export default function ResumeUploadForm() {
           </div>
           <h2 className="text-lg font-bold text-surface-900">{results.message}</h2>
         </div>
-
-        {/* Processing notice */}
-        {uploadedCount > 0 && (
-          <div className="flex items-center gap-3 bg-brand-50 border border-brand-200 text-brand-700
-                          text-sm px-5 py-4 rounded-2xl mb-5">
-            <svg className="w-5 h-5 animate-spin flex-shrink-0" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            <div className="flex-1">
-              <p className="font-semibold">Resumes are being processed</p>
-              <p className="text-brand-600 text-xs mt-0.5">
-                Status updates automatically — no refresh needed.
-              </p>
-            </div>
-          </div>
-        )}
 
         {uploadedCount > 0 && (
           <div className="mb-4">
@@ -332,17 +314,6 @@ export default function ResumeUploadForm() {
                 You have {files.length} files. Please remove {files.length - 10} to continue. Maximum is 10 per upload.
               </p>
             </div>
-          </div>
-        )}
-
-        {/* Error */}
-        {error && (
-          <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 text-sm px-5 py-4 rounded-2xl">
-            <svg className="w-5 h-5 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {error}
           </div>
         )}
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs } from "../../api/jobApi";
 import { exportRankingsCsv } from "../../api/candidatesRankingApi";
@@ -8,8 +9,6 @@ export default function ReportsExportPage() {
   const [selectedJob, setSelectedJob] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [exporting, setExporting] = useState(false);
-  const [exportError, setExportError] = useState(null);
-  const [exportSuccess, setExportSuccess] = useState(false);
 
   useEffect(() => {
     getJobs()
@@ -24,8 +23,6 @@ export default function ReportsExportPage() {
   const handleExport = async () => {
     if (!selectedJob) return;
     setExporting(true);
-    setExportError(null);
-    setExportSuccess(false);
 
     try {
       const response = await exportRankingsCsv({
@@ -42,9 +39,9 @@ export default function ReportsExportPage() {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
-      setExportSuccess(true);
+      toast.success(`Export successful!${selectedJobTitle ? ` "${selectedJobTitle}"` : ""} rankings downloaded.`);
     } catch {
-      setExportError("Export failed. Please try again.");
+      toast.error("Export failed. Please try again.");
     } finally {
       setExporting(false);
     }
@@ -93,11 +90,7 @@ export default function ReportsExportPage() {
               </label>
               <select
                 value={selectedJob}
-                onChange={(e) => {
-                  setSelectedJob(e.target.value);
-                  setExportSuccess(false);
-                  setExportError(null);
-                }}
+                onChange={(e) => setSelectedJob(e.target.value)}
                 className="select-field w-full"
               >
                 <option value="">-- Select a job --</option>
@@ -149,27 +142,6 @@ export default function ReportsExportPage() {
               ))}
             </div>
           </div>
-
-          {/* Messages */}
-          {exportError && (
-            <div className="flash-error mb-4">
-              <span>{exportError}</span>
-              <button onClick={() => setExportError(null)} className="font-bold ml-4">✕</button>
-            </div>
-          )}
-
-          {exportSuccess && (
-            <div className="flash-success mb-4">
-              <span>
-                Export successful!
-                {selectedJobTitle && (
-                  <span className="font-medium"> "{selectedJobTitle}"</span>
-                )}{" "}
-                rankings downloaded.
-              </span>
-              <button onClick={() => setExportSuccess(false)} className="font-bold ml-4">✕</button>
-            </div>
-          )}
 
           {/* Download button — uses brand primary, not green */}
           <button

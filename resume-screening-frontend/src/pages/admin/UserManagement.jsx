@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getUsers, assignRole, deleteUser, createUser } from "../../api/userApi";
 import DeleteModal from "../../components/common/DeleteModal";
@@ -35,7 +36,6 @@ export default function UserManagement() {
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [flash, setFlash] = useState("");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [roleLoading, setRoleLoading] = useState(null);
@@ -45,7 +45,6 @@ export default function UserManagement() {
     name: "", email: "", password: "", role: "hr",
   });
   const [createLoading, setCreateLoading] = useState(false);
-  const [createError, setCreateError] = useState(null);
 
   useEffect(() => { fetchUsers(); }, []);
 
@@ -62,20 +61,15 @@ export default function UserManagement() {
     }
   }
 
-  function showFlash(msg) {
-    setFlash(msg);
-    setTimeout(() => setFlash(""), 3000);
-  }
-
   async function handleRoleChange(user, newRole) {
     if (newRole === user.role) return;
     setRoleLoading(user.id);
     try {
       const res = await assignRole(user.id, newRole);
       setUsers((prev) => prev.map((u) => (u.id === user.id ? { ...u, role: newRole } : u)));
-      showFlash(res.data.message);
+      toast.success(res.data.message);
     } catch (err) {
-      setError(err.response?.data?.message ?? "Failed to update role.");
+      toast.error(err.response?.data?.message ?? "Failed to update role.");
     } finally {
       setRoleLoading(null);
     }
@@ -86,10 +80,10 @@ export default function UserManagement() {
     try {
       const res = await deleteUser(deleteTarget.id);
       setUsers((prev) => prev.filter((u) => u.id !== deleteTarget.id));
-      showFlash(res.data.message);
+      toast.success(res.data.message);
       setDeleteTarget(null);
     } catch (err) {
-      setError(err.response?.data?.message ?? "Failed to delete user.");
+      toast.error(err.response?.data?.message ?? "Failed to delete user.");
     } finally {
       setDeleteLoading(false);
     }
@@ -98,14 +92,13 @@ export default function UserManagement() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     setCreateLoading(true);
-    setCreateError(null);
     try {
       const res = await createUser(createForm);
       setUsers((prev) => [...prev, res.data.user]);
       setShowCreateModal(false);
       setCreateForm({ name: "", email: "", password: "", role: "hr" });
     } catch (err) {
-      setCreateError(err.response?.data?.message || "Failed to create user.");
+      toast.error(err.response?.data?.message || "Failed to create user.");
     } finally {
       setCreateLoading(false);
     }
@@ -127,14 +120,6 @@ export default function UserManagement() {
             Add User
           </button>
         </div>
-
-        {/* Flash */}
-        {flash && (
-          <div className="flash-success">
-            <span>{flash}</span>
-            <button onClick={() => setFlash("")} className="font-bold ml-4">✕</button>
-          </div>
-        )}
 
         {/* Error */}
         {error && (
@@ -244,12 +229,6 @@ export default function UserManagement() {
           <div className="bg-white rounded-3xl shadow-modal w-full max-w-md p-6 animate-scale-in">
             <h2 className="text-lg font-bold text-surface-900 mb-5">Create New User</h2>
 
-            {createError && (
-              <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-2xl text-sm">
-                {createError}
-              </div>
-            )}
-
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-surface-700 mb-1">Full Name</label>
@@ -279,7 +258,7 @@ export default function UserManagement() {
                 </select>
               </div>
               <div className="flex gap-3 pt-2">
-                <button type="button" onClick={() => { setShowCreateModal(false); setCreateError(null); }}
+                <button type="button" onClick={() => setShowCreateModal(false)}
                         className="flex-1 btn-secondary">Cancel</button>
                 <button type="submit" disabled={createLoading}
                         className="flex-1 btn-primary">
