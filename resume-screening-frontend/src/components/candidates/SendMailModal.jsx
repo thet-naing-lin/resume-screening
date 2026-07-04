@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { getMailTemplate, sendCandidateMail } from "../../api/candidateMailApi";
 
 export default function SendMailModal({ resume, jobTitle, onClose }) {
@@ -22,7 +23,7 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
         setSubject(res.data.subject);
         setBody(res.data.body);
       })
-      .catch(() => setError("Failed to load template."))
+      .catch(() => setError("Could not load the email template. Please check your connection and try again."))
       .finally(() => setFetching(false));
   }, [type]);
 
@@ -38,10 +39,12 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
         to_email: toEmail,
       });
       setSuccess(true);
+      toast.success(`Email sent successfully to ${toEmail}`);
     } catch (err) {
       setError(
         err.response?.data?.message ?? "Failed to send email. Please try again.",
       );
+      toast.error(err.response?.data?.message ?? "Failed to send email. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -146,16 +149,6 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
                 </p>
               </div>
             </>
-          )}
-
-          {/* Feedback */}
-          {error && (
-            <div className="flash-error mb-0">{error}</div>
-          )}
-          {success && (
-            <div className="flash-success mb-0">
-              <span>Email sent successfully to {toEmail}</span>
-            </div>
           )}
         </div>
 

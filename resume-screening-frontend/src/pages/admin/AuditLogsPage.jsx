@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getAuditLogs } from "../../api/auditApi";
 
@@ -79,7 +80,7 @@ export default function AuditLogsPage() {
       setMeta(res.data);
       setCurrentPage(page);
     } catch {
-      setError("Failed to load audit logs.");
+      toast.error("Failed to load audit logs.");
     } finally {
       setLoading(false);
     }
@@ -149,9 +150,7 @@ export default function AuditLogsPage() {
           </div>
         )}
 
-        {error && <div className="flash-error">{error}</div>}
-
-        {!loading && !error && logs.length === 0 && (
+        {!loading && logs.length === 0 && (
           <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card">
             <p className="text-4xl mb-4">📋</p>
             <p className="font-semibold text-surface-500">No audit logs found.</p>

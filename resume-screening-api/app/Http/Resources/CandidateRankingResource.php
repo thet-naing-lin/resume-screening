@@ -20,7 +20,7 @@ class CandidateRankingResource extends JsonResource
             // Candidate info
             'candidate' => [
                 'id'               => $this->candidate?->id,
-                'name'             => $this->candidate?->name ?? 'Unknown',
+                'name'             => $this->candidate?->name ?? 'Candidate',
                 'email'            => $this->candidate?->email ?? 'N/A',
                 'phone'            => $this->candidate?->phone ?? 'N/A',
                 'skills'           => $this->candidate?->extracted_skills ?? [],

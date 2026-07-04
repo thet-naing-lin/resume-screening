@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { sendBulkMail, getBulkPreview } from "../../api/candidateMailApi";
 
 export default function BulkMailModal({
@@ -20,7 +21,7 @@ export default function BulkMailModal({
   useEffect(() => {
     getBulkPreview({ status, job_description_id: jobDescriptionId })
       .then((res) => setRecipients(res.data.recipients))
-      .catch(() => setError("Failed to load recipients."))
+      .catch(() => { setError("Could not load the recipient list. Please check your connection and try again."); toast.error("Could not load the recipient list."); })
       .finally(() => setLoadingPreview(false));
   }, []);
 
@@ -52,6 +53,7 @@ export default function BulkMailModal({
       setResult(res.data);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
+      toast.error(err.response?.data?.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -161,8 +163,6 @@ export default function BulkMailModal({
                             className="input-field resize-y" />
                 </div>
               </div>
-
-              {error && <div className="flash-error mb-4">{error}</div>}
 
               <div className="flex justify-between gap-2">
                 <button onClick={() => setStep(1)} className="btn-secondary">

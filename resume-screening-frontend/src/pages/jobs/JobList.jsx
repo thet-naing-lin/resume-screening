@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs, deleteJob } from "../../api/jobApi";
 import DeleteModal from "../../components/common/DeleteModal";
@@ -34,7 +35,6 @@ export default function JobList() {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [flash, setFlash] = useState(location.state?.flash ?? "");
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [search, setSearch] = useState("");
@@ -42,14 +42,13 @@ export default function JobList() {
 
   useEffect(() => {
     fetchJobs();
-  }, []);
-
-  useEffect(() => {
-    if (flash) {
-      const t = setTimeout(() => setFlash(""), 3000);
-      return () => clearTimeout(t);
+    // Show flash from navigation state as a toast
+    if (location.state?.flash) {
+      toast.success(location.state.flash);
+      // Clear the flash from history state
+      window.history.replaceState({}, "");
     }
-  }, [flash]);
+  }, []);
 
   async function fetchJobs() {
     try {
@@ -68,10 +67,10 @@ export default function JobList() {
     try {
       const res = await deleteJob(deleteTarget.id);
       setJobs((prev) => prev.filter((j) => j.id !== deleteTarget.id));
-      setFlash(res.data.message);
+      toast.success(res.data.message);
       setDeleteTarget(null);
     } catch (err) {
-      setError(err.response?.data?.message ?? "Failed to delete.");
+      toast.error(err.response?.data?.message ?? "Failed to delete.");
     } finally {
       setDeleteLoading(false);
     }
@@ -104,14 +103,6 @@ export default function JobList() {
             New Job Description
           </button>
         </div>
-
-        {/* Flash */}
-        {flash && (
-          <div className="flash-success">
-            <span>{flash}</span>
-            <button onClick={() => setFlash("")} className="font-bold ml-4">✕</button>
-          </div>
-        )}
 
         {/* Error */}
         {error && (

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJob, updateJob } from "../../api/jobApi";
 import { SkillTagInput } from "../../components/jobs/JobFormFields";
@@ -35,7 +36,6 @@ export default function EditJob() {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(true);
-  const [submitErr, setSubmitErr] = useState("");
 
   useEffect(() => {
     async function loadJob() {
@@ -54,7 +54,7 @@ export default function EditJob() {
           status: job.status,
         });
       } catch {
-        setSubmitErr("Failed to load job description.");
+        toast.error("Failed to load job description.");
       } finally {
         setFetching(false);
       }
@@ -80,7 +80,6 @@ export default function EditJob() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setSubmitErr("");
     const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
@@ -89,11 +88,12 @@ export default function EditJob() {
     try {
       setLoading(true);
       await updateJob(id, form);
-      navigate("/jobs", { state: { flash: "Job description updated successfully!" } });
+      toast.success("Job description updated successfully!");
+      navigate("/jobs");
     } catch (err) {
       if (err.response?.status === 422)
         setErrors(err.response.data.errors ?? {});
-      else setSubmitErr(err.response?.data?.message ?? "Something went wrong.");
+      else toast.error(err.response?.data?.message ?? "Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -127,12 +127,6 @@ export default function EditJob() {
           <h1 className="text-2xl font-bold text-surface-900">Edit Job Description</h1>
           <p className="text-sm text-surface-500 mt-1">Update the job details below.</p>
         </div>
-
-        {submitErr && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-2xl">
-            {submitErr}
-          </div>
-        )}
 
         <form onSubmit={handleSubmit}
               className="bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8 space-y-6">
