@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendBulkCandidateMailJob;
 use App\Mail\InterviewInvitationMail;
 use App\Mail\RejectionNoticeMail;
 use App\Models\Resume;
@@ -120,6 +121,7 @@ HR Team
 
     /**
      * Send mail to all candidates of a given status (shortlisted / rejected)
+     * Dispatches a queued job to avoid blocking the HTTP request.
      */
     public function sendBulk(Request $request)
     {
@@ -136,14 +138,14 @@ HR Team
         // Build override lookup: resume_id → email
         $overrideMap = collect($request->overrides ?? [])
             ->keyBy('resume_id')
-            ->map(fn($o) => $o['override_email']);
+            ->map(fn($o) => $o['override_email'])
+            ->toArray();
 
-        // We need to join with scores to filter by status, but also allow optional filtering by job description
+        // Get resumes that match the criteria
         $resumes = Resume::with('candidate')
             ->whereHas('score', function ($q) use ($request) {
                 $q->where('status', $request->status);
 
-                // filter by job if provided
                 if ($request->filled('job_description_id')) {
                     $q->where('job_description_id', $request->job_description_id);
                 }
@@ -152,9 +154,9 @@ HR Team
                 $q->where('job_description_id', $request->job_description_id);
             })
             ->when(!auth()->user()->hasAnyRole(['admin', 'super_admin']), function ($q) {
-                $q->where('uploaded_by', auth()->id()); // HR scope
+                $q->where('uploaded_by', auth()->id());
             })
-            ->get();
+            ->pluck('id');
 
         if ($resumes->isEmpty()) {
             return response()->json([
@@ -162,69 +164,26 @@ HR Team
             ], 404);
         }
 
-        $sent   = [];
-        $failed = [];
+        // Dispatch the job to the queue
+        SendBulkCandidateMailJob::dispatch(
+            resumeIds: $resumes->toArray(),
+            status: $request->status,
+            subject: $request->subject,
+            body: $request->body,
+            userId: auth()->id(),
+            overrideMap: $overrideMap,
+        );
 
-        foreach ($resumes as $index => $resume) {
-            $candidate = $resume->candidate;
-
-            // Determine actual recipient — override takes priority
-            $recipientEmail = $overrideMap[$resume->id] ?? $candidate->email;
-
-            if (!$recipientEmail) {
-                $failed[] = [
-                    'resume_id'      => $resume->id,
-                    'candidate_name' => $candidate?->name ?? 'Candidate',
-                    'reason'         => 'No email address on record',
-                ];
-                continue;
-            }
-
-            $candidateName = $candidate->name ?? 'Candidate';
-
-            try {
-                $type = $request->status === 'shortlisted' ? 'interview' : 'rejection';
-
-                $mailable = $type === 'interview'
-                    ? new InterviewInvitationMail($request->subject, $request->body, $candidateName)
-                    : new RejectionNoticeMail($request->subject, $request->body, $candidateName);
-
-                // Delay to avoid Mailtrap rate limit
-                if ($index > 0) {
-                    sleep(2);
-                }
-
-                Mail::to($recipientEmail)->send($mailable);  // send ONCE
-
-                AuditLogger::log("candidate.email_sent", $resume, [
-                    'type'           => $type,
-                    'to'             => $recipientEmail,
-                    'original_email' => $candidate->email,
-                    'corrected'      => $recipientEmail !== $candidate->email,
-                    'candidate_name' => $candidateName,
-                    'subject'        => $request->subject,
-                    'bulk'           => true,
-                ]);
-
-                $sent[] = [
-                    'resume_id'      => $resume->id,
-                    'candidate_name' => $candidateName,
-                    'email'          => $recipientEmail,
-                ];
-            } catch (\Exception $e) {
-                $failed[] = [
-                    'resume_id'      => $resume->id,
-                    'candidate_name' => $candidate?->name ?? 'Candidate',
-                    'reason'         => $e->getMessage(),
-                ];
-            }
-        }
+        AuditLogger::log('candidate.bulk_mail_queued', null, [
+            'status'             => $request->status,
+            'job_description_id' => $request->job_description_id,
+            'recipient_count'    => $resumes->count(),
+        ]);
 
         return response()->json([
-            'message' => "Bulk email complete. Sent: " . count($sent) . ", Failed: " . count($failed),
-            'sent'    => $sent,
-            'failed'  => $failed,
-        ]);
+            'message' => "Bulk email job queued. {$resumes->count()} email(s) will be sent in the background.",
+            'count'   => $resumes->count(),
+        ], 202);
     }
 
     /**

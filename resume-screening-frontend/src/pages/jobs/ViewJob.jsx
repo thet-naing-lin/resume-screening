@@ -181,7 +181,7 @@ export default function ViewJob() {
               <div className="flex flex-wrap gap-2 mt-4">
                 <Badge label={job.experience_level} style={EXP_BADGE[job.experience_level] ?? ""} />
                 <Badge label={job.employment_type} style={EMP_BADGE[job.employment_type] ?? ""} />
-                <span className="badge border bg-surface-50/20 text-white border-white/20 backdrop-blur-sm">
+                <span className="badge border bg-white/20 text-white border-white/30 backdrop-blur-sm">
                   {job.status}
                 </span>
               </div>

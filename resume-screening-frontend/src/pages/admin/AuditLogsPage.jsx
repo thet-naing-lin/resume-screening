@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getAuditLogs } from "../../api/auditApi";
@@ -22,6 +22,19 @@ function ActionBadge({ action }) {
 
 function DetailsCell({ metadata }) {
   const [showModal, setShowModal] = useState(false);
+  const closeRef = useRef(null);
+
+  useEffect(() => {
+    if (showModal) {
+      closeRef.current?.focus();
+      const handleKeyDown = (e) => {
+        if (e.key === "Escape") setShowModal(false);
+      };
+      document.addEventListener("keydown", handleKeyDown);
+      return () => document.removeEventListener("keydown", handleKeyDown);
+    }
+  }, [showModal]);
+
   if (!metadata) return <span className="text-surface-300">—</span>;
   const entries = Object.entries(metadata);
   const preview = entries.map(([k, v]) => `${k}: ${v}`).join(", ");
@@ -36,14 +49,17 @@ function DetailsCell({ metadata }) {
       </button>
       {showModal && (
         <div className="fixed inset-0 bg-surface-950/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-             onClick={() => setShowModal(false)}>
+             onClick={() => setShowModal(false)}
+             role="dialog" aria-modal="true" aria-labelledby="audit-details-title">
           <div className="bg-white rounded-3xl shadow-modal w-full max-w-md p-6 animate-scale-in"
                onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-surface-900">Log Details</h3>
-              <button onClick={() => setShowModal(false)}
+              <h3 id="audit-details-title" className="font-bold text-surface-900">Log Details</h3>
+              <button ref={closeRef} onClick={() => setShowModal(false)}
                       className="text-surface-400 hover:text-surface-600 text-xl w-8 h-8 flex items-center
-                                 justify-center rounded-xl hover:bg-surface-100 transition-colors">✕</button>
+                                 justify-center rounded-xl hover:bg-surface-100 transition-colors
+                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                      aria-label="Close details">✕</button>
             </div>
             <div className="space-y-2">
               {entries.map(([key, value]) => (
@@ -116,20 +132,20 @@ export default function AuditLogsPage() {
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <label className="block text-xs text-surface-500 mb-1">Action</label>
-              <input type="text" placeholder="e.g. resume.uploaded" value={filters.action}
+              <label htmlFor="audit-filter-action" className="block text-xs text-surface-500 mb-1">Action</label>
+              <input id="audit-filter-action" type="text" placeholder="e.g. resume.uploaded" value={filters.action}
                      onChange={(e) => setFilters({ ...filters, action: e.target.value })}
-                     className="input-field" />
+                     className="input-field" aria-label="Filter by action type" />
             </div>
             <div>
-              <label className="block text-xs text-surface-500 mb-1">From Date</label>
-              <input type="date" value={filters.date_from}
+              <label htmlFor="audit-filter-date-from" className="block text-xs text-surface-500 mb-1">From Date</label>
+              <input id="audit-filter-date-from" type="date" value={filters.date_from}
                      onChange={(e) => setFilters({ ...filters, date_from: e.target.value })}
                      className="input-field" />
             </div>
             <div>
-              <label className="block text-xs text-surface-500 mb-1">To Date</label>
-              <input type="date" value={filters.date_to}
+              <label htmlFor="audit-filter-date-to" className="block text-xs text-surface-500 mb-1">To Date</label>
+              <input id="audit-filter-date-to" type="date" value={filters.date_to}
                      onChange={(e) => setFilters({ ...filters, date_to: e.target.value })}
                      className="input-field" />
             </div>
@@ -152,7 +168,7 @@ export default function AuditLogsPage() {
 
         {!loading && logs.length === 0 && (
           <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card">
-            <p className="text-4xl mb-4">📋</p>
+            <p className="text-4xl mb-4" aria-hidden="true">📋</p>
             <p className="font-semibold text-surface-500">No audit logs found.</p>
           </div>
         )}
@@ -206,10 +222,21 @@ export default function AuditLogsPage() {
             </div>
 
             {meta && meta.last_page > 1 && (
-              <div className="flex justify-center gap-2 px-6 py-4 border-t border-surface-100">
+              <div className="flex items-center justify-center gap-2 px-6 py-4 border-t border-surface-100">
+                <button
+                  onClick={() => fetchLogs(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="w-9 h-9 rounded-xl text-sm font-medium transition-all
+                             bg-white text-surface-600 border border-surface-200 hover:bg-surface-50
+                             disabled:opacity-30 disabled:cursor-not-allowed
+                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                  aria-label="Previous page"
+                >
+                  ‹
+                </button>
                 {Array.from({ length: meta.last_page }, (_, i) => i + 1).map((page) => (
                   <button key={page} onClick={() => fetchLogs(page)}
-                          className={`w-9 h-9 rounded-xl text-sm font-medium transition-all ${
+                          className={`w-9 h-9 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 ${
                             page === currentPage
                               ? "bg-brand-500 text-white shadow-md shadow-brand-500/20"
                               : "bg-white text-surface-600 border border-surface-200 hover:bg-surface-50"
@@ -217,6 +244,17 @@ export default function AuditLogsPage() {
                     {page}
                   </button>
                 ))}
+                <button
+                  onClick={() => fetchLogs(currentPage + 1)}
+                  disabled={currentPage === meta.last_page}
+                  className="w-9 h-9 rounded-xl text-sm font-medium transition-all
+                             bg-white text-surface-600 border border-surface-200 hover:bg-surface-50
+                             disabled:opacity-30 disabled:cursor-not-allowed
+                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                  aria-label="Next page"
+                >
+                  ›
+                </button>
               </div>
             )}
           </div>

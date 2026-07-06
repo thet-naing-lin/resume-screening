@@ -3,68 +3,17 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Role;
 use App\Models\User;
 use App\Services\AuditLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
-use App\Services\AuditLogService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
-    /**
-     * REGISTER
-     * Creates a new user account and returns a token.
-     * Default role is 'hr' — only admins are created via seeder.
-     */
-    public function register(Request $request)
-    {
-        // Validate incoming data — throws 422 if fails
-        $validated = $request->validate([
-            'name'     => 'required|string|max:255',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed', // needs password_confirmation field
-        ]);
-
-        // Create the user — password auto-hashed via model cast
-        $user = User::create([
-            'name'     => $validated['name'],
-            'email'    => $validated['email'],
-            'password' => Hash::make($validated['password']),
-        ]);
-
-        // Assign default 'hr' role
-        $hrRole = Role::where('name', 'hr')->first();
-        if ($hrRole) {
-            $user->roles()->attach($hrRole->id);
-        }
-
-        // Create Sanctum token — this is what React will store and send
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        // ── Audit log ──
-        AuditLogger::log('auth.register', $user, [
-            'email'      => $user->email,
-            'role'       => 'hr',
-            'registered_user_id' => $user->id, // ← explicit backup in metadata
-        ]);
-
-        return response()->json([
-            'message' => 'Registration successful.',
-            'token'   => $token,
-            'user'    => [
-                'id'    => $user->id,
-                'name'  => $user->name,
-                'email' => $user->email,
-                'roles' => $user->roles->pluck('name'),
-            ],
-        ], 201);
-    }
-
     /**
      * LOGIN
      * Verifies credentials and returns a Sanctum token.

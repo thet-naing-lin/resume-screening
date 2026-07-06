@@ -12,25 +12,30 @@ use Illuminate\Support\Facades\Storage;
 
 class ResumeController extends Controller
 {
-    public function index()
+    public function index(\Illuminate\Http\Request $request)
     {
         // Only known privileged roles see all resumes
-        $fullAccessRoles = ['admin', 'super_admin']; // add new privileged roles here
+        $fullAccessRoles = ['admin', 'super_admin'];
+
+        $perPage = min($request->input('per_page', 15), 100);
 
         $resumes = Resume::with(['candidate', 'jobDescription', 'score', 'uploader'])->latest();
-
-        // HR sees only their own uploads, Admin sees everything
-        // if (auth()->user()->hasRole('hr')) {
-        //     $resumes = $resumes->where('uploaded_by', auth()->id());
-        // }
 
         if (!auth()->user()->hasAnyRole($fullAccessRoles)) {
             $resumes = $resumes->where('uploaded_by', auth()->id());
         }
 
-        $resumes = $resumes->get()->values();
+        $paginated = $resumes->paginate($perPage);
 
-        return response()->json(['data' => $resumes]);
+        return response()->json([
+            'data' => $paginated->items(),
+            'meta' => [
+                'current_page' => $paginated->currentPage(),
+                'last_page'    => $paginated->lastPage(),
+                'per_page'     => $paginated->perPage(),
+                'total'        => $paginated->total(),
+            ],
+        ]);
     }
 
     public function store(StoreResumeRequest $request)

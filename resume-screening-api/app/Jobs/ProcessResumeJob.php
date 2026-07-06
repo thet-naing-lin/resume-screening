@@ -17,6 +17,7 @@ use Smalot\PdfParser\Parser as PdfParser;
 
 // DOCX parser
 use PhpOffice\PhpWord\IOFactory;
+use PhpOffice\PhpWord\Element\Paragraph;
 
 class ProcessResumeJob implements ShouldQueue
 {
@@ -60,6 +61,11 @@ class ProcessResumeJob implements ShouldQueue
             if (empty(trim($cleanText))) {
                 throw new \Exception("No readable text could be extracted from this file.");
             }
+
+            // ── STAGE 4.5: Structure single-line text into lines ─
+            // PDFs often return all text on one line with no breaks.
+            // Detect section headers and insert newlines so parsers work.
+            $cleanText = $this->structureText($cleanText);
 
             // ── STAGE 5: Parse candidate info from text ──────────
             $parsedData = $this->parseCandidate($cleanText);
@@ -149,7 +155,7 @@ class ProcessResumeJob implements ShouldQueue
             $text .= $element->getText() . ' ';
         }
         // Paragraph
-        elseif ($element instanceof \PhpOffice\PhpWord\Element\Paragraph) {
+        elseif ($element instanceof Paragraph) {
             foreach ($element->getElements() as $child) {
                 $text .= $this->getElementText($child);
             }
@@ -186,6 +192,101 @@ class ProcessResumeJob implements ShouldQueue
         // Trim each line
         $lines = array_map('trim', explode("\n", $text));
         $text  = implode("\n", array_filter($lines, fn($l) => $l !== ''));
+
+        return trim($text);
+    }
+
+    // ── TEXT STRUCTURER ──────────────────────────────────────────
+    // Some PDFs return all text on a single line with no breaks.
+    // This detects section headers and inserts newlines so parsers work.
+    private function structureText(string $text): string
+    {
+        // If text already has multiple newlines, it's structured — skip
+        if (substr_count($text, "\n") >= 3) {
+            return $text;
+        }
+
+        // ── Step 1: Separate name from email/phone ────────────────
+        // Some PDFs concatenate "NameEmailPhone" with no spaces.
+        // Extract email/phone first, strip them, leaving clean text for name.
+        $email = null;
+        $phone = null;
+
+        // Extract email: find @ then match the full email address forward
+        $atPos = strpos($text, '@');
+        if ($atPos !== false) {
+            if (preg_match('/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/', substr($text, $atPos - 50 < 0 ? 0 : $atPos - 50), $em)) {
+                // Find the actual email in the matched text
+                $email = $em[0];
+                // Locate the email in the full text and strip it
+                $emailPos = strpos($text, $email);
+                if ($emailPos !== false) {
+                    $text = substr_replace($text, '', $emailPos, strlen($email));
+                }
+            }
+        }
+
+        // Extract phone: match formats like (+95)9762710957, +95 9 123456789, 09-1234-5678
+        if (preg_match('/(\([\+ \d][\d\s\-\(\)]{6,}|\+?\d[\d\s\-\(\)]{6,})/', $text, $ph)) {
+            $phone = trim($ph[1]);
+            $text = str_replace($phone, '', $text);
+        }
+
+        // Rebuild: name line, then email, then phone (each on its own line)
+        $nameLine = trim(preg_replace('/\s{2,}/', ' ', $text));
+        $parts = [$nameLine];
+        if ($email) {
+            $parts[] = strtolower($email);
+        }
+        if ($phone) {
+            $parts[] = $phone;
+        }
+        $text = implode("\n", $parts);
+
+        // ── Step 2: Insert line breaks before section headers ─────
+        $sectionHeaders = [
+            'WORK EXPERIENCE', 'EXPERIENCE', 'EDUCATION', 'SKILLS',
+            'PROJECTS', 'PROJECT', 'SUMMARY', 'OBJECTIVE', 'PROFILE',
+            'CONTACT', 'REFERENCES', 'CERTIFICATIONS', 'AWARDS',
+            'LANGUAGES', 'INTERESTS', 'EXPERTISE', 'PROFICIENCIES',
+            'LINKS', 'PORTFOLIO', 'HOBBES', 'VOLUNTEER',
+            'PUBLICATIONS', 'CONFERENCES', 'TRAINING', 'COURSES',
+            'ACHIEVEMENTS', 'ACTIVITIES', 'STRENGTHS', 'WEAKNESSES',
+            'PERSONAL STATEMENT', 'CAREER OBJECTIVE', 'CAREER SUMMARY',
+            'PROFESSIONAL SUMMARY', 'PROFESSIONAL EXPERIENCE',
+            'TECHNICAL SKILLS', 'CORE COMPETENCIES', 'KEY SKILLS',
+            'WORK HISTORY', 'EMPLOYMENT', 'POSITIONS',
+        ];
+
+        foreach ($sectionHeaders as $header) {
+            $escaped = preg_quote($header, '/');
+            $text = preg_replace(
+                '/(' . $escaped . ')/i',
+                "\n" . '$1',
+                $text
+            );
+        }
+
+        // ── Step 3: Insert line breaks before bullet points ──────
+        $text = preg_replace('/(?<=.)([•●◦▪▸►→])\s/', "\n" . '$1 ', $text);
+
+        // ── Step 4: Insert line breaks before date ranges ────────
+        // MM/YYYY - MM/YYYY or MM/YYYY – Present
+        $text = preg_replace(
+            '/(\d{2}\/\d{4})\s*[-–—]\s*(\d{2}\/\d{4}|Present|Current)/i',
+            "\n" . '$1' . ' - ' . '$2',
+            $text
+        );
+
+        // YYYY - YYYY or YYYY – Present
+        $text = preg_replace(
+            '/\b(\d{4})\s*[-–—]\s*(\d{4}|Present|Current)\b/i',
+            "\n" . '$1' . ' - ' . '$2',
+            $text
+        );
+
+        // Collapse multiple newlines into max 2
+        $text = preg_replace('/\n{3,}/', "\n\n", $text);
 
         return trim($text);
     }
