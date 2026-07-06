@@ -10,14 +10,24 @@ use Illuminate\Http\Request;
 class JobDescriptionController extends Controller
 {
     // GET /api/jobs
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = min($request->input('per_page', 15), 100);
+
         $jobs = JobDescription::with('creator')
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(fn($job) => $this->formatJob($job));
+            ->paginate($perPage)
+            ->through(fn($job) => $this->formatJob($job));
 
-        return response()->json(['jobs' => $jobs]);
+        return response()->json([
+            'data' => $jobs->items(),
+            'meta' => [
+                'current_page' => $jobs->currentPage(),
+                'last_page'    => $jobs->lastPage(),
+                'per_page'     => $jobs->perPage(),
+                'total'        => $jobs->total(),
+            ],
+        ]);
     }
 
     // GET /api/jobs/{job}

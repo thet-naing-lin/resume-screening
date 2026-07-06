@@ -18,7 +18,7 @@ export default function ResumeUploadForm() {
 
   useEffect(() => {
     getJobs()
-      .then((res) => setJobs(res.data.jobs))
+      .then((res) => setJobs(res.data.data))
       .catch(() => toast.error("Could not load job list. Please refresh."))
       .finally(() => setJobsLoading(false));
   }, []);

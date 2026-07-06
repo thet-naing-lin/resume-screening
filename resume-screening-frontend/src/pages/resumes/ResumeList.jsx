@@ -166,7 +166,7 @@ export default function ResumeList() {
         {/* Search + Filter bar */}
         <div className="filter-bar">
           <div className="search-input-wrapper">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
             </svg>
             <input
@@ -174,17 +174,19 @@ export default function ResumeList() {
               placeholder="Search by candidate name, job, or filename..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
+              aria-label="Search resumes"
             />
             {search && (
               <button onClick={() => setSearch("")}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-600">
+                      aria-label="Clear search"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 rounded">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             )}
           </div>
-          <select value={filterJob} onChange={(e) => setFilterJob(e.target.value)} className="select-field">
+          <select value={filterJob} onChange={(e) => setFilterJob(e.target.value)} className="select-field" aria-label="Filter by job position">
             <option value="all">All Positions</option>
             {[...new Map(resumes.filter((r) => r.job_description).map((r) => [r.job_description.id, r.job_description])).values()]
               .map((job) => (
@@ -238,7 +240,7 @@ export default function ResumeList() {
 
           {!initialLoading && filtered.length === 0 && !error && (
             <div className="py-16 text-center">
-              <p className="text-4xl mb-4">{search || filterJob !== "all" ? "🔍" : "📄"}</p>
+              <p className="text-4xl mb-4" aria-hidden="true">{search || filterJob !== "all" ? "🔍" : "📄"}</p>
               <p className="font-semibold text-surface-500">
                 {search || filterJob !== "all" ? "No resumes match your search." : "No resumes uploaded yet"}
               </p>

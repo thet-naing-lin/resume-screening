@@ -31,7 +31,7 @@ class GoogleAuthController extends Controller
         try {
             $googleUser = Socialite::driver('google')->stateless()->user();
         } catch (\Exception $e) {
-            return redirect(env('FRONTEND_URL') . '/login?error=google_failed');
+            return redirect(config('services.frontend.url') . '/login?error=google_failed');
         }
 
         // Only allow users already in the system (created by admin)
@@ -39,7 +39,7 @@ class GoogleAuthController extends Controller
 
         if (!$user) {
             // Not in the system — reject
-            return redirect(env('FRONTEND_URL') . '/login?error=not_registered');
+            return redirect(config('services.frontend.url') . '/login?error=not_registered');
         }
 
         // Link google_id on first Google login
@@ -59,6 +59,6 @@ class GoogleAuthController extends Controller
             'ip'     => request()->ip(),
         ]);
 
-        return redirect(env('FRONTEND_URL') . '/auth/google/callback?token=' . $token);
+        return redirect(config('services.frontend.url') . '/auth/google/callback?token=' . $token);
     }
 }

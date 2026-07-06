@@ -130,7 +130,7 @@ export default function UserManagement() {
         )}
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
           <StatCard label="Total Users" value={users.length} accent="text-surface-900" />
           <StatCard label="Admins" value={users.filter((u) => u.role === "admin").length} accent="text-purple-600" />
           <StatCard label="HR Recruiters" value={users.filter((u) => u.role === "hr").length} accent="text-brand-600" />
@@ -177,7 +177,7 @@ export default function UserManagement() {
             </div>
           ) : users.length === 0 ? (
             <div className="py-16 text-center">
-              <p className="text-4xl mb-4">👥</p>
+              <p className="text-4xl mb-4" aria-hidden="true">👥</p>
               <p className="font-semibold text-surface-500">No users found</p>
             </div>
           ) : (
@@ -249,32 +249,33 @@ export default function UserManagement() {
 
       {/* Create User Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-surface-950/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-surface-950/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in"
+             role="dialog" aria-modal="true" aria-labelledby="create-user-title">
           <div className="bg-white rounded-3xl shadow-modal w-full max-w-md p-6 animate-scale-in">
-            <h2 className="text-lg font-bold text-surface-900 mb-5">Create New User</h2>
+            <h2 id="create-user-title" className="text-lg font-bold text-surface-900 mb-5">Create New User</h2>
 
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-surface-700 mb-1">Full Name</label>
-                <input type="text" required value={createForm.name}
+                <label htmlFor="create-user-name" className="block text-sm font-medium text-surface-700 mb-1">Full Name</label>
+                <input id="create-user-name" type="text" required value={createForm.name}
                        onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
                        placeholder="John Doe" className="input-field" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-surface-700 mb-1">Email Address</label>
-                <input type="email" required value={createForm.email}
+                <label htmlFor="create-user-email" className="block text-sm font-medium text-surface-700 mb-1">Email Address</label>
+                <input id="create-user-email" type="email" required value={createForm.email}
                        onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
                        placeholder="user@company.com" className="input-field" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-surface-700 mb-1">Password</label>
-                <input type="password" required minLength={8} value={createForm.password}
+                <label htmlFor="create-user-password" className="block text-sm font-medium text-surface-700 mb-1">Password</label>
+                <input id="create-user-password" type="password" required minLength={8} value={createForm.password}
                        onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
                        placeholder="Min. 8 characters" className="input-field" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-surface-700 mb-1">Role</label>
-                <select value={createForm.role}
+                <label htmlFor="create-user-role" className="block text-sm font-medium text-surface-700 mb-1">Role</label>
+                <select id="create-user-role" value={createForm.role}
                         onChange={(e) => setCreateForm({ ...createForm, role: e.target.value })}
                         className="select-field w-full">
                   <option value="hr">HR</option>
@@ -284,7 +285,7 @@ export default function UserManagement() {
               <div className="flex gap-3 pt-2">
                 <button type="button" onClick={() => setShowCreateModal(false)}
                         className="flex-1 btn-secondary">Cancel</button>
-                <button type="submit" disabled={createLoading}
+                <button type="submit" disabled={createLoading} aria-busy={createLoading}
                         className="flex-1 btn-primary">
                   {createLoading ? "Creating..." : "Create User"}
                 </button>

@@ -98,7 +98,7 @@ export default function CandidateRankingPage() {
     getJobs()
       .then((res) => {
         const raw = res.data;
-        const jobs = Array.isArray(raw) ? raw : Array.isArray(raw?.jobs) ? raw.jobs : [];
+        const jobs = Array.isArray(raw?.data) ? raw.data : Array.isArray(raw) ? raw : [];
         setJobDescriptions(jobs);
       })
       .catch((err) => console.error("Failed to load jobs:", err))
@@ -237,7 +237,7 @@ export default function CandidateRankingPage() {
             {/* Empty state */}
             {!loading && !error && candidates.length === 0 && (
               <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card">
-                <p className="text-4xl mb-4">🔎</p>
+                <p className="text-4xl mb-4" aria-hidden="true">🔎</p>
                 <p className="font-semibold text-surface-500">No candidates found.</p>
                 <p className="text-sm text-surface-400 mt-1">
                   Try clearing the filters or upload more resumes for this job.
@@ -305,7 +305,7 @@ export default function CandidateRankingPage() {
                             <p className="font-semibold text-surface-900">{item.candidate.name}</p>
                             <p className="text-surface-400 text-xs">{item.candidate.email}</p>
                             <p className="text-surface-400 text-xs truncate max-w-[180px]">
-                              📄 {item.original_filename}
+                              <span aria-hidden="true">📄</span> {item.original_filename}
                             </p>
                           </td>
                           <td className="text-center text-surface-600">
@@ -337,14 +337,16 @@ export default function CandidateRankingPage() {
                               <button onClick={() => setAiTarget(item)}
                                       className="text-xs bg-brand-50 text-brand-700 hover:bg-brand-100
                                                  px-3 py-1.5 rounded-xl transition-colors w-full max-w-[120px]
-                                                 font-medium">
-                                ✨ AI Insights
+                                                 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                      aria-label={`AI Insights for ${item.candidate.name}`}>
+                                <span aria-hidden="true">✨</span> AI Insights
                               </button>
                               <button onClick={() => setMailTarget(item)}
                                       className="text-xs bg-emerald-50 text-emerald-700 hover:bg-emerald-100
                                                  px-3 py-1.5 rounded-xl transition-colors w-full max-w-[120px]
-                                                 font-medium">
-                                ✉️ Send Mail
+                                                 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
+                                      aria-label={`Send mail to ${item.candidate.name}`}>
+                                <span aria-hidden="true">✉️</span> Send Mail
                               </button>
                             </div>
                           </td>
@@ -356,12 +358,23 @@ export default function CandidateRankingPage() {
 
                 {/* Pagination */}
                 {meta && meta.last_page > 1 && (
-                  <div className="flex justify-center gap-2 px-6 py-4 border-t border-surface-100">
+                  <div className="flex items-center justify-center gap-2 px-6 py-4 border-t border-surface-100">
+                    <button
+                      onClick={() => refetch(meta.current_page - 1)}
+                      disabled={meta.current_page === 1}
+                      className="w-9 h-9 rounded-xl text-sm font-medium transition-all
+                                 bg-white text-surface-600 border border-surface-200 hover:bg-surface-50
+                                 disabled:opacity-30 disabled:cursor-not-allowed
+                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                      aria-label="Previous page"
+                    >
+                      ‹
+                    </button>
                     {Array.from({ length: meta.last_page }, (_, i) => i + 1).map((page) => (
                       <button
                         key={page}
                         onClick={() => refetch(page)}
-                        className={`w-9 h-9 rounded-xl text-sm font-medium transition-all ${
+                        className={`w-9 h-9 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 ${
                           page === meta.current_page
                             ? "bg-brand-500 text-white shadow-md shadow-brand-500/20"
                             : "bg-white text-surface-600 border border-surface-200 hover:bg-surface-50"
@@ -370,6 +383,17 @@ export default function CandidateRankingPage() {
                         {page}
                       </button>
                     ))}
+                    <button
+                      onClick={() => refetch(meta.current_page + 1)}
+                      disabled={meta.current_page === meta.last_page}
+                      className="w-9 h-9 rounded-xl text-sm font-medium transition-all
+                                 bg-white text-surface-600 border border-surface-200 hover:bg-surface-50
+                                 disabled:opacity-30 disabled:cursor-not-allowed
+                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                      aria-label="Next page"
+                    >
+                      ›
+                    </button>
                   </div>
                 )}
               </div>

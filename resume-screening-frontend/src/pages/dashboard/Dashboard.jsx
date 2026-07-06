@@ -229,7 +229,7 @@ export default function Dashboard() {
           <div className="relative flex items-center justify-between flex-wrap gap-4">
             <div>
               <h2 className="text-xl md:text-2xl font-bold tracking-tight">
-                {greeting}, {user?.name?.split(" ")[0]}! 👋
+                {greeting}, {user?.name?.split(" ")[0] || "there"}! <span aria-hidden="true">👋</span>
               </h2>
               <p className="text-brand-100/80 text-sm mt-1.5">
                 Here's what's happening with your recruitment today.

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs, deleteJob } from "../../api/jobApi";
@@ -40,6 +40,18 @@ export default function JobList() {
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
 
+  async function fetchJobs() {
+    try {
+      setLoading(true);
+      const res = await getJobs();
+      setJobs(res.data.data);
+    } catch (err) {
+      setError(err.response?.data?.message ?? "Failed to load jobs.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchJobs();
     // Show flash from navigation state as a toast
@@ -49,18 +61,6 @@ export default function JobList() {
       window.history.replaceState({}, "");
     }
   }, []);
-
-  async function fetchJobs() {
-    try {
-      setLoading(true);
-      const res = await getJobs();
-      setJobs(res.data.jobs);
-    } catch (err) {
-      setError(err.response?.data?.message ?? "Failed to load jobs.");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function handleDelete() {
     setDeleteLoading(true);
@@ -114,7 +114,7 @@ export default function JobList() {
 
         {/* Stat Cards */}
         {loading ? (
-          <div className="grid grid-cols-3 gap-4 mb-6 animate-pulse">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 animate-pulse">
             {[1, 2, 3].map((i) => (
               <div key={i} className="stat-card">
                 <div className="h-8 bg-surface-100 rounded-lg w-16 mb-2" />
@@ -123,7 +123,7 @@ export default function JobList() {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             {[
               { label: "Total Jobs", value: jobs.length, accent: "text-surface-900", bg: "bg-surface-50" },
               { label: "Active", value: activeCount, accent: "text-emerald-600", bg: "bg-emerald-50" },
@@ -149,7 +149,7 @@ export default function JobList() {
         ) : (
           <div className="filter-bar">
             <div className="search-input-wrapper">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
               </svg>
               <input
@@ -157,12 +157,14 @@ export default function JobList() {
                 placeholder="Search by title or location..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                aria-label="Search job descriptions"
               />
             </div>
             <select
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
               className="select-field"
+              aria-label="Filter by status"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -236,7 +238,7 @@ export default function JobList() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-16 text-center">
-              <p className="text-4xl mb-4">📋</p>
+              <p className="text-4xl mb-4" aria-hidden="true">📋</p>
               <p className="font-semibold text-surface-500">No job descriptions found</p>
               <p className="text-sm text-surface-400 mt-1">
                 {search ? "Try a different search term." : "Create your first job description to get started."}
@@ -266,13 +268,12 @@ export default function JobList() {
                   {filtered.map((job) => (
                     <tr key={job.id}>
                       <td>
-                        <p className="font-semibold text-surface-900 hover:text-brand-600 cursor-pointer transition-colors"
-                           onClick={() => navigate(`/jobs/${job.id}`)}>
+                        <Link to={`/jobs/${job.id}`} className="font-semibold text-surface-900 hover:text-brand-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 rounded">
                           {job.title}
-                        </p>
+                        </Link>
                         {job.location && (
                           <p className="text-xs text-surface-400 mt-0.5 flex items-center gap-1">
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                                 d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
@@ -312,17 +313,20 @@ export default function JobList() {
                       <td>
                         <div className="flex items-center justify-end gap-1.5">
                           <button onClick={() => navigate(`/jobs/${job.id}`)}
-                                  className="text-surface-400 hover:text-surface-700 text-xs font-medium p-2 rounded-xl hover:bg-surface-100 transition-colors"
+                                  className="text-surface-400 hover:text-surface-700 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-surface-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                  aria-label={`View ${job.title}`}
                                   title="View">
                             <FaRegEye />
                           </button>
                           <button onClick={() => navigate(`/jobs/${job.id}/edit`)}
-                                  className="text-brand-500 hover:text-brand-700 text-xs font-medium p-2 rounded-xl hover:bg-brand-50 transition-colors"
+                                  className="text-brand-500 hover:text-brand-700 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-brand-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                  aria-label={`Edit ${job.title}`}
                                   title="Edit">
                             <FaUserEdit />
                           </button>
                           <button onClick={() => setDeleteTarget(job)}
-                                  className="text-red-400 hover:text-red-600 text-xs font-medium p-2 rounded-xl hover:bg-red-50 transition-colors"
+                                  className="text-red-400 hover:text-red-600 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
+                                  aria-label={`Delete ${job.title}`}
                                   title="Delete">
                             <BsTrash />
                           </button>
