@@ -169,15 +169,17 @@ export default function Login() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-surface-300 mb-1.5">
+              <label htmlFor="login-email" className="block text-sm font-medium text-surface-300 mb-1.5">
                 Email Address
               </label>
               <input
+                id="login-email"
                 type="email"
                 name="email"
                 value={form.email}
                 onChange={handleChange}
                 required
+                autoComplete="email"
                 placeholder="you@company.com"
                 className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-2xl text-white
                            placeholder:text-surface-500 focus:outline-none focus:ring-2
@@ -188,7 +190,7 @@ export default function Login() {
             {/* Password */}
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="block text-sm font-medium text-surface-300">
+                <label htmlFor="login-password" className="block text-sm font-medium text-surface-300">
                   Password
                 </label>
                 <Link
@@ -200,11 +202,13 @@ export default function Login() {
               </div>
               <div className="relative">
                 <input
+                  id="login-password"
                   type={showPassword ? "text" : "password"}
                   name="password"
                   value={form.password}
                   onChange={handleChange}
                   required
+                  autoComplete="current-password"
                   placeholder="Enter your password"
                   className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-2xl
                              text-white placeholder:text-surface-500 focus:outline-none focus:ring-2
@@ -213,6 +217,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-500
                              hover:text-surface-300 transition-colors"
                 >
@@ -259,6 +264,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
+              aria-busy={loading}
               className="w-full bg-gradient-to-r from-brand-500 to-brand-600
                          hover:from-brand-600 hover:to-brand-700 disabled:from-brand-400
                          disabled:to-brand-500 text-white font-semibold py-3 rounded-2xl

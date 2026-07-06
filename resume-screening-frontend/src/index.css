@@ -173,6 +173,24 @@
   }
 }
 
+/* ── Focus-visible variants ──────────────────────────────────── */
+.input-field,
+.select-field,
+.search-input-wrapper input {
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+         focus-visible:border-brand-300;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* ── Utilities layer ─────────────────────────────────────────── */
 @layer utilities {
   .text-gradient {

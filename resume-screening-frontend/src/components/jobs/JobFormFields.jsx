@@ -26,7 +26,7 @@ export function SkillTagInput({ skills, onChange, error }) {
   }
 
   return (
-    <div>
+    <div role="group" aria-label="Required skills">
       <div className={`flex flex-wrap gap-2 p-3 border rounded-2xl min-h-[48px] bg-white
                        focus-within:ring-2 focus-within:ring-brand-500/30 focus-within:border-brand-300
                        transition-all ${error ? "border-red-400 bg-red-50" : "border-surface-200"}`}>
@@ -38,8 +38,10 @@ export function SkillTagInput({ skills, onChange, error }) {
             <button
               type="button"
               onClick={() => removeSkill(skill)}
+              aria-label={`Remove ${skill}`}
               className="text-brand-400 hover:text-brand-700 font-bold ml-1
-                         hover:bg-brand-100 rounded-full w-4 h-4 flex items-center justify-center"
+                         hover:bg-brand-100 rounded-full w-4 h-4 flex items-center justify-center
+                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
             >
               ×
             </button>
@@ -67,7 +69,7 @@ export function SkillTagInput({ skills, onChange, error }) {
         </kbd>{" "}
         to add a skill
       </p>
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="text-red-500 text-xs mt-1" role="alert">{error}</p>}
     </div>
   );
 }

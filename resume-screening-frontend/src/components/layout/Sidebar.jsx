@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import useAuthStore from "../../store/authStore";
 
@@ -82,10 +83,30 @@ const adminLinks = [
 export default function Sidebar({ isOpen, onClose }) {
   const { user } = useAuthStore();
   const isAdmin = user?.roles?.includes("admin");
+  const sidebarRef = useRef(null);
+
+  // Handle Escape key to close mobile sidebar
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isOpen, onClose]);
+
+  // Focus first link when sidebar opens on mobile
+  useEffect(() => {
+    if (isOpen && sidebarRef.current) {
+      const firstLink = sidebarRef.current.querySelector("a, button");
+      firstLink?.focus();
+    }
+  }, [isOpen]);
 
   const linkClass = ({ isActive }) =>
     `group flex items-center gap-3 px-3 py-2.5 rounded-2xl text-sm font-medium
      transition-all duration-200 relative
+     focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
      ${isActive
         ? "bg-brand-50 text-brand-700 font-semibold"
         : "text-surface-500 hover:text-surface-800 hover:bg-surface-100"
@@ -108,6 +129,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
       {/* Sidebar */}
       <aside
+        ref={sidebarRef}
         className={`
         fixed top-0 left-0 h-full w-64 bg-white border-r border-surface-100
         z-30 flex flex-col transition-transform duration-300 ease-in-out

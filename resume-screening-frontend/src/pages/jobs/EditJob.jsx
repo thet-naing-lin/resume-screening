@@ -5,15 +5,15 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJob, updateJob } from "../../api/jobApi";
 import { SkillTagInput } from "../../components/jobs/JobFormFields";
 
-function Field({ label, required, error, children }) {
+function Field({ label, required, error, id, children }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-surface-700 mb-1.5">
+      <label htmlFor={id} className="block text-sm font-medium text-surface-700 mb-1.5">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
       {children}
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+      {error && <p className="text-red-500 text-xs mt-1" role="alert">{error}</p>}
     </div>
   );
 }
@@ -105,8 +105,9 @@ export default function EditJob() {
   if (fetching)
     return (
       <DashboardLayout>
-        <div className="flex justify-center items-center h-64">
+        <div className="flex justify-center items-center h-64" role="status" aria-label="Loading job description">
           <div className="w-10 h-10 border-[3px] border-brand-500 border-t-transparent rounded-full animate-spin" />
+          <span className="sr-only">Loading job description...</span>
         </div>
       </DashboardLayout>
     );
@@ -130,19 +131,19 @@ export default function EditJob() {
 
         <form onSubmit={handleSubmit}
               className="bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8 space-y-6">
-          <Field label="Job Title" required error={errors.title}>
-            <input type="text" name="title" value={form.title} onChange={handleChange}
+          <Field label="Job Title" required error={errors.title} id="edit-title">
+            <input id="edit-title" type="text" name="title" value={form.title} onChange={handleChange}
                    placeholder="e.g. Senior Backend Developer" className={inputClass("title")} />
           </Field>
 
-          <Field label="Job Description" required error={errors.description}>
-            <textarea name="description" value={form.description} onChange={handleChange}
+          <Field label="Job Description" required error={errors.description} id="edit-description">
+            <textarea id="edit-description" name="description" value={form.description} onChange={handleChange}
                       rows={5} placeholder="Describe the role..."
                       className={`${inputClass("description")} resize-y min-h-[140px] max-h-[420px]`} />
             <p className="text-xs text-surface-400 mt-1 text-right">{form.description.length} characters</p>
           </Field>
 
-          <Field label="Required Skills" required error={errors.required_skills}>
+          <Field label="Required Skills" required error={errors.required_skills} id="edit-skills">
             <SkillTagInput
               skills={form.required_skills}
               onChange={(skills) => {
@@ -152,22 +153,22 @@ export default function EditJob() {
             />
           </Field>
 
-          <Field label="Required Qualification" error={errors.required_qualification}>
-            <textarea name="required_qualification" value={form.required_qualification}
+          <Field label="Required Qualification" error={errors.required_qualification} id="edit-qualification">
+            <textarea id="edit-qualification" name="required_qualification" value={form.required_qualification}
                       onChange={handleChange} rows={3}
                       placeholder="e.g. Bachelor's degree in Computer Science or related field..."
                       className={`${inputClass("required_qualification")} resize-none`} />
           </Field>
 
-          <Field label="Experience Years" error={errors.experience_years}>
-            <input type="number" name="experience_years" value={form.experience_years}
+          <Field label="Experience Years" error={errors.experience_years} id="edit-exp-years">
+            <input id="edit-exp-years" type="number" name="experience_years" value={form.experience_years}
                    onChange={handleChange} min={0} max={50} placeholder="e.g. 3"
                    className={inputClass("experience_years")} />
           </Field>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Field label="Experience Level" required error={errors.experience_level}>
-              <select name="experience_level" value={form.experience_level}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Experience Level" required error={errors.experience_level} id="edit-exp-level">
+              <select id="edit-exp-level" name="experience_level" value={form.experience_level}
                       onChange={handleChange} className={`${inputClass("experience_level")} bg-white`}>
                 <option value="">Select level</option>
                 <option value="junior">Junior</option>
@@ -175,8 +176,8 @@ export default function EditJob() {
                 <option value="senior">Senior</option>
               </select>
             </Field>
-            <Field label="Employment Type" required error={errors.employment_type}>
-              <select name="employment_type" value={form.employment_type}
+            <Field label="Employment Type" required error={errors.employment_type} id="edit-emp-type">
+              <select id="edit-emp-type" name="employment_type" value={form.employment_type}
                       onChange={handleChange} className={`${inputClass("employment_type")} bg-white`}>
                 <option value="">Select type</option>
                 <option value="full-time">Full-Time</option>
@@ -188,14 +189,14 @@ export default function EditJob() {
             </Field>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <Field label="Location">
-              <input type="text" name="location" value={form.location}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Location" id="edit-location">
+              <input id="edit-location" type="text" name="location" value={form.location}
                      onChange={handleChange} placeholder="e.g. Yangon / Remote"
                      className={inputClass("location")} />
             </Field>
-            <Field label="Status">
-              <select name="status" value={form.status} onChange={handleChange}
+            <Field label="Status" id="edit-status">
+              <select id="edit-status" name="status" value={form.status} onChange={handleChange}
                       className="select-field w-full">
                 <option value="active">Active</option>
                 <option value="closed">Closed</option>
@@ -207,7 +208,7 @@ export default function EditJob() {
             <button type="button" onClick={() => navigate("/jobs")} className="btn-secondary">
               Cancel
             </button>
-            <button type="submit" disabled={loading} className="btn-primary">
+            <button type="submit" disabled={loading} aria-busy={loading} className="btn-primary">
               {loading ? "Saving..." : "Save Changes"}
             </button>
           </div>
