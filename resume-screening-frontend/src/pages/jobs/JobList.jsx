@@ -140,11 +140,11 @@ export default function JobList() {
         {/* Search + Filter bar */}
         {loading ? (
           <div className="filter-bar mb-6 animate-pulse">
-            <div className="search-input-wrapper flex-1">
-              <div className="h-4 w-4 bg-surface-200 rounded flex-shrink-0" />
-              <div className="h-4 bg-surface-100 rounded w-48" />
+            <div className="search-input-wrapper flex-1 relative">
+              <div className="h-4 w-4 bg-surface-200 rounded absolute left-4 top-1/2 -translate-y-1/2" />
+              <div className="h-10 bg-surface-100 rounded-2xl border border-surface-200 w-full" />
             </div>
-            <div className="h-10 bg-surface-100 rounded-xl w-32" />
+            <div className="h-10 bg-surface-100 rounded-2xl border border-surface-200 w-32" />
           </div>
         ) : (
           <div className="filter-bar">
