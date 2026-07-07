@@ -32,15 +32,11 @@ I categorized issues by type and scope:
 
 Prioritization Criteria
 
-┌──────────┬────────────────────────────────────┬─────────────────────────┐
-│ Priority │              Criteria              │         Example         │
-├──────────┼────────────────────────────────────┼─────────────────────────┤
-│ High     │ Affects all users, no workaround   │ Slow initial load       │
-├──────────┼────────────────────────────────────┼─────────────────────────┤
-│ Medium   │ Degrades experience but functional │ Missing logout feedback │
-├──────────┼────────────────────────────────────┼─────────────────────────┤
-│ Low      │ Nice-to-have, not blocking         │ Theme toggle            │
-└──────────┴────────────────────────────────────┴─────────────────────────┘
+| Priority | Criteria | Example |
+|----------|----------|---------|
+| High | Affects all users, no workaround | Slow initial load |
+| Medium | Degrades experience but functional | Missing logout feedback |
+| Low | Nice-to-have, not blocking | Theme toggle |
 
 Issue Structure
 
