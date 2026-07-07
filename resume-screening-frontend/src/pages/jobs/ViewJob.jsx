@@ -4,17 +4,17 @@ import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJob } from "../../api/jobApi";
 
 const EXP_BADGE = {
-  junior: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  mid: "bg-blue-50 text-blue-700 border-blue-200",
-  senior: "bg-purple-50 text-purple-700 border-purple-200",
+  junior: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800",
+  mid: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800",
+  senior: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800",
 };
 
 const EMP_BADGE = {
-  "full-time": "bg-brand-50 text-brand-700 border-brand-200",
-  "part-time": "bg-amber-50 text-amber-700 border-amber-200",
-  contract: "bg-orange-50 text-orange-700 border-orange-200",
-  internship: "bg-pink-50 text-pink-700 border-pink-200",
-  freelance: "bg-teal-50 text-teal-700 border-teal-200",
+  "full-time": "bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-900/30 dark:text-brand-400 dark:border-brand-800",
+  "part-time": "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800",
+  contract: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800",
+  internship: "bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-900/30 dark:text-pink-400 dark:border-pink-800",
+  freelance: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800",
 };
 
 function Badge({ label, style }) {
@@ -150,7 +150,8 @@ export default function ViewJob() {
         {/* Back button */}
         <button
           onClick={() => navigate("/jobs")}
-          className="inline-flex items-center gap-1.5 text-sm text-surface-400 hover:text-surface-700 mb-5 transition-colors"
+          className="inline-flex items-center gap-1.5 text-sm text-surface-400 hover:text-surface-700 mb-5 transition-colors
+                     dark:hover:text-surface-200"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -216,12 +217,13 @@ export default function ViewJob() {
         {/* Two-column details */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Description — takes 2 columns */}
-          <div className="lg:col-span-2 bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8">
-            <h2 className="text-base font-semibold text-surface-900 mb-4 flex items-center gap-2">
+          <div className="lg:col-span-2 bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8
+                          dark:bg-surface-900 dark:border-surface-800">
+            <h2 className="text-base font-semibold text-surface-900 mb-4 flex items-center gap-2 dark:text-surface-50">
               <span className="w-1.5 h-5 bg-brand-500 rounded-full" />
               Job Description
             </h2>
-            <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-line">
+            <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-line dark:text-surface-300">
               {job.description}
             </p>
           </div>
@@ -229,8 +231,9 @@ export default function ViewJob() {
           {/* Sidebar — Skills & Qualification */}
           <div className="space-y-6">
             {/* Skills */}
-            <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6">
-              <h2 className="text-base font-semibold text-surface-900 mb-4 flex items-center gap-2">
+            <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6
+                            dark:bg-surface-900 dark:border-surface-800">
+              <h2 className="text-base font-semibold text-surface-900 mb-4 flex items-center gap-2 dark:text-surface-50">
                 <span className="w-1.5 h-5 bg-brand-500 rounded-full" />
                 Required Skills
                 <span className="text-xs font-normal text-surface-400 ml-1">({job.required_skills.length})</span>
@@ -239,7 +242,7 @@ export default function ViewJob() {
                 {job.required_skills.map((skill) => (
                   <span key={skill}
                         className="bg-brand-50 text-brand-700 text-xs px-2.5 py-1 rounded-xl font-medium
-                                   border border-brand-100">
+                                   border border-brand-100 dark:bg-brand-900/30 dark:text-brand-400 dark:border-brand-800">
                     {skill}
                   </span>
                 ))}
@@ -248,12 +251,13 @@ export default function ViewJob() {
 
             {/* Qualification */}
             {job.required_qualification && (
-              <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6">
-                <h2 className="text-base font-semibold text-surface-900 mb-3 flex items-center gap-2">
+              <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6
+                              dark:bg-surface-900 dark:border-surface-800">
+                <h2 className="text-base font-semibold text-surface-900 mb-3 flex items-center gap-2 dark:text-surface-50">
                   <span className="w-1.5 h-5 bg-brand-500 rounded-full" />
                   Required Qualification
                 </h2>
-                <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-line">
+                <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-line dark:text-surface-300">
                   {job.required_qualification}
                 </p>
               </div>

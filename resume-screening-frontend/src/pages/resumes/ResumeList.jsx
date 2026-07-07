@@ -10,12 +10,12 @@ const PROCESSING_STATUSES = ["uploaded", "parsing", "parsed", "scoring"];
 const POLL_INTERVAL_MS = 3000;
 
 const statusConfig = {
-  uploaded: { label: "Uploaded", style: "bg-surface-100 text-surface-600 border-surface-200" },
-  parsing: { label: "Parsing", style: "bg-amber-50 text-amber-700 border-amber-200" },
-  parsed: { label: "Parsed", style: "bg-blue-50 text-blue-700 border-blue-200" },
-  scoring: { label: "Scoring", style: "bg-purple-50 text-purple-700 border-purple-200" },
-  scored: { label: "Scored", style: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-  failed: { label: "Failed", style: "bg-red-50 text-red-600 border-red-200" },
+  uploaded: { label: "Uploaded", style: "bg-surface-100 text-surface-600 border-surface-200 dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700" },
+  parsing: { label: "Parsing", style: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800" },
+  parsed: { label: "Parsed", style: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800" },
+  scoring: { label: "Scoring", style: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800" },
+  scored: { label: "Scored", style: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800" },
+  failed: { label: "Failed", style: "bg-red-50 text-red-600 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800" },
 };
 
 const DELETABLE = ["uploaded", "failed"];
@@ -277,15 +277,15 @@ export default function ResumeList() {
                       <td>
                         <div className="flex items-center gap-3">
                           <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0
-                            ${resume.file_type === "pdf" ? "bg-red-50 text-red-600" : "bg-blue-50 text-blue-600"}`}>
+                            ${resume.file_type === "pdf" ? "bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-400" : "bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"}`}>
                             {resume.file_type === "pdf" ? "PDF" : "DOC"}
                           </div>
-                          <span className="font-medium text-surface-800 max-w-[180px] truncate">
+                          <span className="font-medium text-surface-800 max-w-[180px] truncate dark:text-surface-200">
                             {resume.original_filename}
                           </span>
                         </div>
                       </td>
-                      <td className="text-surface-600 max-w-[160px] truncate">
+                      <td className="text-surface-600 max-w-[160px] truncate dark:text-surface-300">
                         {resume.job_description?.title ?? "—"}
                       </td>
                       <td className="text-surface-500">
@@ -327,7 +327,8 @@ export default function ResumeList() {
                         ) : (
                           <span title={`Cannot delete — resume is ${resume.status}`}
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium
-                                           text-surface-300 bg-surface-50 rounded-xl cursor-not-allowed">
+                                           text-surface-300 bg-surface-50 rounded-xl cursor-not-allowed
+                                           dark:bg-surface-800 dark:text-surface-600">
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />

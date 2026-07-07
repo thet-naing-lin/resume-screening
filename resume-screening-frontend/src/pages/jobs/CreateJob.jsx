@@ -20,7 +20,7 @@ const EMPTY_FORM = {
 function Field({ label, required, error, id, children }) {
   return (
     <div>
-      <label htmlFor={id} className="block text-sm font-medium text-surface-700 mb-1.5">
+      <label htmlFor={id} className="block text-sm font-medium text-surface-700 mb-1.5 dark:text-surface-300">
         {label}
         {required && <span className="text-red-500 ml-1">*</span>}
       </label>
@@ -86,20 +86,22 @@ export default function CreateJob() {
         <div className="mb-8">
           <button
             onClick={() => navigate("/jobs")}
-            className="flex items-center gap-1.5 text-sm text-surface-400 hover:text-surface-700 mb-3 transition-colors"
+            className="flex items-center gap-1.5 text-sm text-surface-400 hover:text-surface-700 mb-3 transition-colors
+                       dark:hover:text-surface-200"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
             Back to Job Descriptions
           </button>
-          <h1 className="text-2xl font-bold text-surface-900">Create Job Description</h1>
+          <h1 className="text-2xl font-bold text-surface-900 dark:text-surface-50">Create Job Description</h1>
           <p className="text-sm text-surface-500 mt-1">
             Fields marked <span className="text-red-500">*</span> are required.
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8 space-y-6
+                                                dark:bg-surface-900 dark:border-surface-800">
           <Field label="Job Title" required error={errors.title} id="create-title">
             <input id="create-title" type="text" name="title" value={form.title} onChange={handleChange}
                    placeholder="e.g. Senior Backend Developer" className={inputClass("title")} />
@@ -138,7 +140,7 @@ export default function CreateJob() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Experience Level" required error={errors.experience_level} id="create-exp-level">
               <select id="create-exp-level" name="experience_level" value={form.experience_level}
-                      onChange={handleChange} className={`${inputClass("experience_level")} bg-white`}>
+                      onChange={handleChange} className={`${inputClass("experience_level")} bg-white dark:bg-surface-800`}>
                 <option value="">Select level</option>
                 <option value="junior">Junior</option>
                 <option value="mid">Mid-Level</option>
@@ -147,7 +149,7 @@ export default function CreateJob() {
             </Field>
             <Field label="Employment Type" required error={errors.employment_type} id="create-emp-type">
               <select id="create-emp-type" name="employment_type" value={form.employment_type}
-                      onChange={handleChange} className={`${inputClass("employment_type")} bg-white`}>
+                      onChange={handleChange} className={`${inputClass("employment_type")} bg-white dark:bg-surface-800`}>
                 <option value="">Select type</option>
                 <option value="full-time">Full-Time</option>
                 <option value="part-time">Part-Time</option>
@@ -173,7 +175,7 @@ export default function CreateJob() {
             </Field>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-2 border-t border-surface-100">
+          <div className="flex items-center justify-end gap-3 pt-2 border-t border-surface-100 dark:border-surface-800">
             <button type="button" onClick={() => navigate("/jobs")} className="btn-secondary">
               Cancel
             </button>

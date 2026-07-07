@@ -6,7 +6,7 @@ export default function DashboardLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex h-screen bg-surface-50 overflow-hidden">
+    <div className="flex h-screen bg-surface-50 overflow-hidden dark:bg-surface-950">
       {/* Skip to content link */}
       <a
         href="#main-content"

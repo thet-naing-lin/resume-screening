@@ -108,8 +108,8 @@ export default function Sidebar({ isOpen, onClose }) {
      transition-all duration-200 relative
      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
      ${isActive
-        ? "bg-brand-50 text-brand-700 font-semibold"
-        : "text-surface-500 hover:text-surface-800 hover:bg-surface-100"
+        ? "bg-brand-50 text-brand-700 font-semibold dark:bg-brand-900/30 dark:text-brand-400"
+        : "text-surface-500 hover:text-surface-800 hover:bg-surface-100 dark:text-surface-400 dark:hover:text-surface-200 dark:hover:bg-surface-800"
      }`;
 
   const getRoleLabel = (role) => {
@@ -122,7 +122,7 @@ export default function Sidebar({ isOpen, onClose }) {
       {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-surface-950/40 backdrop-blur-sm z-20 lg:hidden animate-fade-in"
+          className="fixed inset-0 bg-surface-950/40 backdrop-blur-sm z-20 lg:hidden animate-fade-in dark:bg-surface-950/60"
           onClick={onClose}
         />
       )}
@@ -133,12 +133,13 @@ export default function Sidebar({ isOpen, onClose }) {
         className={`
         fixed top-0 left-0 h-full w-64 bg-white border-r border-surface-100
         z-30 flex flex-col transition-transform duration-300 ease-in-out
+        dark:bg-surface-950 dark:border-surface-800
         ${isOpen ? "translate-x-0" : "-translate-x-full"}
         lg:translate-x-0 lg:static
       `}
       >
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 py-5 border-b border-surface-100">
+        <div className="flex items-center gap-3 px-5 py-5 border-b border-surface-100 dark:border-surface-800">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-500 to-brand-600
                           flex items-center justify-center shrink-0 shadow-md shadow-brand-500/20">
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +148,7 @@ export default function Sidebar({ isOpen, onClose }) {
             </svg>
           </div>
           <div>
-            <p className="text-sm font-bold text-surface-900 leading-tight tracking-tight">Resume</p>
+            <p className="text-sm font-bold text-surface-900 leading-tight tracking-tight dark:text-surface-50">Resume</p>
             <p className="text-[11px] text-surface-400 leading-tight font-medium">Screening Tool</p>
           </div>
         </div>
@@ -214,7 +215,7 @@ export default function Sidebar({ isOpen, onClose }) {
         </nav>
 
         {/* User Info at bottom */}
-        <div className="px-4 py-4 border-t border-surface-100 bg-surface-50/50">
+        <div className="px-4 py-4 border-t border-surface-100 bg-surface-50/50 dark:border-surface-800 dark:bg-surface-900/50">
           <div className="flex items-center gap-3 px-2">
             <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-brand-400 to-brand-500
                             flex items-center justify-center shrink-0 shadow-sm">
@@ -223,7 +224,7 @@ export default function Sidebar({ isOpen, onClose }) {
               </span>
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-surface-800 truncate">
+              <p className="text-sm font-semibold text-surface-800 truncate dark:text-surface-100">
                 {user?.name}
               </p>
               <p className="text-xs text-surface-400 capitalize font-medium">

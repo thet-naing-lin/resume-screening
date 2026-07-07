@@ -113,12 +113,13 @@ export default function ResumeUploadForm() {
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-2xl
-                          flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          flex items-center justify-center mx-auto mb-4
+                          dark:bg-emerald-900/30 dark:border-emerald-800">
+            <svg className="w-8 h-8 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="text-lg font-bold text-surface-900">{results.message}</h2>
+          <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50">{results.message}</h2>
         </div>
 
         {uploadedCount > 0 && (
@@ -129,11 +130,12 @@ export default function ResumeUploadForm() {
             <div className="space-y-2">
               {results.uploaded.map((r) => (
                 <div key={r.id}
-                     className="flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-2xl px-4 py-3">
-                  <svg className="w-4 h-4 text-emerald-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     className="flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-2xl px-4 py-3
+                                dark:bg-emerald-900/20 dark:border-emerald-800">
+                  <svg className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
-                  <span className="text-sm text-surface-700 flex-1 font-medium">{r.filename}</span>
+                  <span className="text-sm text-surface-700 flex-1 font-medium dark:text-surface-200">{r.filename}</span>
                   <span className="text-xs text-surface-400">#{r.id}</span>
                 </div>
               ))}
@@ -149,12 +151,13 @@ export default function ResumeUploadForm() {
             <div className="space-y-2">
               {results.failed.map((r, i) => (
                 <div key={i}
-                     className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-2xl px-4 py-3">
+                     className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-2xl px-4 py-3
+                                dark:bg-red-900/20 dark:border-red-800">
                   <svg className="w-4 h-4 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
-                  <span className="text-sm text-surface-700 flex-1 font-medium">{r.filename}</span>
-                  <span className="text-xs text-red-500">{r.error}</span>
+                  <span className="text-sm text-surface-700 flex-1 font-medium dark:text-surface-200">{r.filename}</span>
+                  <span className="text-xs text-red-500 dark:text-red-400">{r.error}</span>
                 </div>
               ))}
             </div>
@@ -186,7 +189,7 @@ export default function ResumeUploadForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* Job Selector */}
         <div>
-          <label htmlFor="job_id" className="block text-sm font-medium text-surface-700 mb-1.5">
+          <label htmlFor="job_id" className="block text-sm font-medium text-surface-700 mb-1.5 dark:text-surface-300">
             Job Position <span className="text-red-500">*</span>
           </label>
           <select
@@ -209,7 +212,7 @@ export default function ResumeUploadForm() {
 
         {/* Drop Zone */}
         <div>
-          <label className="block text-sm font-medium text-surface-700 mb-1.5">
+          <label className="block text-sm font-medium text-surface-700 mb-1.5 dark:text-surface-300">
             Resume Files <span className="text-red-500">*</span>
             <span className="text-surface-400 font-normal ml-1">(up to 10 files)</span>
           </label>
@@ -221,19 +224,20 @@ export default function ResumeUploadForm() {
             onClick={() => fileInputRef.current?.click()}
             className={`border-2 border-dashed rounded-2xl px-6 py-10 text-center cursor-pointer transition-all
               ${dragging
-                ? "border-brand-400 bg-brand-50/50 scale-[1.01]"
-                : "border-surface-200 bg-surface-50 hover:border-brand-300 hover:bg-brand-50/30"
+                ? "border-brand-400 bg-brand-50/50 scale-[1.01] dark:bg-brand-900/20"
+                : "border-surface-200 bg-surface-50 hover:border-brand-300 hover:bg-brand-50/30 dark:border-surface-700 dark:bg-surface-800 dark:hover:border-brand-500 dark:hover:bg-brand-900/10"
               }`}
           >
             <div className="w-14 h-14 bg-white border border-surface-200 rounded-2xl
                             flex items-center justify-center mx-auto mb-4 shadow-sm
-                            group-hover:border-brand-200 transition-colors">
+                            group-hover:border-brand-200 transition-colors
+                            dark:bg-surface-900 dark:border-surface-700">
               <svg className="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                   d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
               </svg>
             </div>
-            <p className="text-sm font-semibold text-surface-700">
+            <p className="text-sm font-semibold text-surface-700 dark:text-surface-200">
               {dragging ? "Drop files here!" : "Drag & drop resumes here"}
             </p>
             <p className="text-xs text-surface-400 mt-1">or click to browse multiple files</p>
@@ -271,21 +275,22 @@ export default function ResumeUploadForm() {
               {files.map((f, index) => (
                 <div key={index}
                      className="flex items-center gap-3 bg-white border border-surface-200 rounded-2xl
-                                px-4 py-3 shadow-card">
+                                px-4 py-3 shadow-card dark:bg-surface-900 dark:border-surface-800">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center text-xs font-bold flex-shrink-0
                     ${f.name.endsWith(".pdf")
-                      ? "bg-red-50 text-red-600 border border-red-100"
-                      : "bg-blue-50 text-blue-600 border border-blue-100"}`}>
+                      ? "bg-red-50 text-red-600 border border-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800"
+                      : "bg-blue-50 text-blue-600 border border-blue-100 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"}`}>
                     {f.name.endsWith(".pdf") ? "PDF" : "DOC"}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm text-surface-800 font-medium truncate">{f.name}</p>
+                    <p className="text-sm text-surface-800 font-medium truncate dark:text-surface-200">{f.name}</p>
                     <p className="text-xs text-surface-400">{(f.size / 1024).toFixed(1)} KB</p>
                   </div>
                   <button
                     type="button"
                     onClick={() => removeFile(index)}
-                    className="text-surface-300 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50"
+                    className="text-surface-300 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50
+                               dark:hover:bg-red-900/30 dark:hover:text-red-400"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -300,14 +305,15 @@ export default function ResumeUploadForm() {
         {/* Over-limit warning */}
         {files.length > 10 && (
           <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 text-amber-800
-                          text-sm px-5 py-4 rounded-2xl">
-            <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          text-sm px-5 py-4 rounded-2xl
+                          dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-300">
+            <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
             </svg>
             <div>
               <p className="font-semibold">Too many files selected</p>
-              <p className="text-amber-700 mt-0.5">
+              <p className="text-amber-700 mt-0.5 dark:text-amber-400">
                 You have {files.length} files. Please remove {files.length - 10} to continue. Maximum is 10 per upload.
               </p>
             </div>

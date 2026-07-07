@@ -9,17 +9,17 @@ import { FaRegEye, FaUserEdit } from "react-icons/fa";
 
 // ── Badge helpers ──
 const EXP_BADGE = {
-  junior: "bg-green-50 text-green-700 border-green-200",
-  mid: "bg-blue-50 text-blue-700 border-blue-200",
-  senior: "bg-purple-50 text-purple-700 border-purple-200",
+  junior: "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800",
+  mid: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800",
+  senior: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800",
 };
 
 const EMP_BADGE = {
-  "full-time": "bg-indigo-50 text-indigo-700 border-indigo-200",
-  "part-time": "bg-amber-50 text-amber-700 border-amber-200",
-  contract: "bg-orange-50 text-orange-700 border-orange-200",
-  internship: "bg-pink-50 text-pink-700 border-pink-200",
-  freelance: "bg-teal-50 text-teal-700 border-teal-200",
+  "full-time": "bg-indigo-50 text-indigo-700 border-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-400 dark:border-indigo-800",
+  "part-time": "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800",
+  contract: "bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-800",
+  internship: "bg-pink-50 text-pink-700 border-pink-200 dark:bg-pink-900/30 dark:text-pink-400 dark:border-pink-800",
+  freelance: "bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-900/30 dark:text-teal-400 dark:border-teal-800",
 };
 
 function Badge({ label, style }) {
@@ -125,9 +125,9 @@ export default function JobList() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
             {[
-              { label: "Total Jobs", value: jobs.length, accent: "text-surface-900", bg: "bg-surface-50" },
-              { label: "Active", value: activeCount, accent: "text-emerald-600", bg: "bg-emerald-50" },
-              { label: "Closed", value: closedCount, accent: "text-red-500", bg: "bg-red-50" },
+              { label: "Total Jobs", value: jobs.length, accent: "text-surface-900 dark:text-surface-100", bg: "bg-surface-50" },
+              { label: "Active", value: activeCount, accent: "text-emerald-600 dark:text-emerald-400", bg: "bg-emerald-50" },
+              { label: "Closed", value: closedCount, accent: "text-red-500 dark:text-red-400", bg: "bg-red-50" },
             ].map((s) => (
               <div key={s.label} className="stat-card">
                 <p className={`text-[28px] font-bold ${s.accent} tracking-tight`}>{s.value}</p>
@@ -268,7 +268,8 @@ export default function JobList() {
                   {filtered.map((job) => (
                     <tr key={job.id}>
                       <td>
-                        <Link to={`/jobs/${job.id}`} className="font-semibold text-surface-900 hover:text-brand-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 rounded">
+                        <Link to={`/jobs/${job.id}`} className="font-semibold text-surface-900 hover:text-brand-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 rounded
+                                                                dark:text-surface-100 dark:hover:text-brand-400">
                           {job.title}
                         </Link>
                         {job.location && (
@@ -286,7 +287,8 @@ export default function JobList() {
                       <td>
                         <div className="flex flex-wrap gap-1 max-w-[200px]">
                           {job.required_skills.slice(0, 3).map((skill) => (
-                            <span key={skill} className="bg-surface-100 text-surface-600 text-xs px-2 py-0.5 rounded-lg font-medium">
+                            <span key={skill} className="bg-surface-100 text-surface-600 text-xs px-2 py-0.5 rounded-lg font-medium
+                                                         dark:bg-surface-800 dark:text-surface-300">
                               {skill}
                             </span>
                           ))}
@@ -297,7 +299,7 @@ export default function JobList() {
                       </td>
                       <td><Badge label={job.experience_level} style={EXP_BADGE[job.experience_level]} /></td>
                       <td><Badge label={job.employment_type} style={EMP_BADGE[job.employment_type]} /></td>
-                      <td className="text-sm text-surface-600">
+                      <td className="text-sm text-surface-600 dark:text-surface-300">
                         {job.experience_years != null ? `${job.experience_years} yr${job.experience_years !== 1 ? "s" : ""}`
                           : <span className="text-surface-300">—</span>}
                       </td>
@@ -305,27 +307,30 @@ export default function JobList() {
                         <Badge
                           label={job.status}
                           style={job.status === "active"
-                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                            : "bg-surface-100 text-surface-500 border-surface-200"}
+                            ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800"
+                            : "bg-surface-100 text-surface-500 border-surface-200 dark:bg-surface-800 dark:text-surface-400 dark:border-surface-700"}
                         />
                       </td>
                       <td className="text-surface-400 text-xs">{job.created_at}</td>
                       <td>
                         <div className="flex items-center justify-end gap-1.5">
                           <button onClick={() => navigate(`/jobs/${job.id}`)}
-                                  className="text-surface-400 hover:text-surface-700 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-surface-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                  className="text-surface-400 hover:text-surface-700 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-surface-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+                                            dark:hover:text-surface-200 dark:hover:bg-surface-800"
                                   aria-label={`View ${job.title}`}
                                   title="View">
                             <FaRegEye />
                           </button>
                           <button onClick={() => navigate(`/jobs/${job.id}/edit`)}
-                                  className="text-brand-500 hover:text-brand-700 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-brand-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                  className="text-brand-500 hover:text-brand-700 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-brand-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+                                            dark:hover:bg-brand-900/30 dark:hover:text-brand-400"
                                   aria-label={`Edit ${job.title}`}
                                   title="Edit">
                             <FaUserEdit />
                           </button>
                           <button onClick={() => setDeleteTarget(job)}
-                                  className="text-red-400 hover:text-red-600 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30"
+                                  className="text-red-400 hover:text-red-600 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30
+                                            dark:hover:bg-red-900/30 dark:hover:text-red-400"
                                   aria-label={`Delete ${job.title}`}
                                   title="Delete">
                             <BsTrash />
@@ -347,7 +352,7 @@ export default function JobList() {
           description={
             <>
               Are you sure you want to delete{" "}
-              <strong className="text-surface-900">"{deleteTarget.title}"</strong>?
+              <strong className="text-surface-900 dark:text-surface-100">"{deleteTarget.title}"</strong>?
               This cannot be undone.
             </>
           }

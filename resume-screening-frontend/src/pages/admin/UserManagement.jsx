@@ -6,8 +6,8 @@ import DeleteModal from "../../components/common/DeleteModal";
 
 // ── Helpers ──
 const ROLE_STYLE = {
-  admin: "bg-purple-50 text-purple-700 border-purple-200",
-  hr: "bg-brand-50 text-brand-700 border-brand-200",
+  admin: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800",
+  hr: "bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-900/30 dark:text-brand-400 dark:border-brand-800",
 };
 
 const ROLE_LABEL = {
@@ -17,14 +17,14 @@ const ROLE_LABEL = {
 };
 
 function RoleBadge({ role }) {
-  const style = ROLE_STYLE[role] ?? "bg-surface-100 text-surface-500 border-surface-200";
+  const style = ROLE_STYLE[role] ?? "bg-surface-100 text-surface-500 border-surface-200 dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700";
   return <span className={`badge border ${style}`}>{ROLE_LABEL[role] ?? role}</span>;
 }
 
 function StatCard({ label, value, accent }) {
   return (
     <div className="stat-card">
-      <p className={`text-[28px] font-bold ${accent} tracking-tight`}>{value}</p>
+      <p className={`text-[28px] font-bold ${accent} tracking-tight dark:text-surface-50`}>{value}</p>
       <p className="text-sm text-surface-500 mt-1">{label}</p>
     </div>
   );
@@ -131,7 +131,7 @@ export default function UserManagement() {
 
         {/* Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-          <StatCard label="Total Users" value={users.length} accent="text-surface-900" />
+          <StatCard label="Total Users" value={users.length} accent="text-surface-900 dark:text-surface-100" />
           <StatCard label="Admins" value={users.filter((u) => u.role === "admin").length} accent="text-purple-600" />
           <StatCard label="HR Recruiters" value={users.filter((u) => u.role === "hr").length} accent="text-brand-600" />
         </div>
@@ -202,7 +202,7 @@ export default function UserManagement() {
                                           flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
                             {user.name.charAt(0).toUpperCase()}
                           </div>
-                          <span className="font-semibold text-surface-900">{user.name}</span>
+                          <span className="font-semibold text-surface-900 dark:text-surface-100">{user.name}</span>
                         </div>
                       </td>
                       <td className="text-surface-500">{user.email}</td>
@@ -215,7 +215,8 @@ export default function UserManagement() {
                             onChange={(e) => handleRoleChange(user, e.target.value)}
                             className="text-sm border border-surface-200 rounded-xl px-3 py-1.5 bg-white
                                        text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-500/30
-                                       disabled:opacity-50 disabled:cursor-not-allowed"
+                                       disabled:opacity-50 disabled:cursor-not-allowed
+                                       dark:bg-surface-800 dark:border-surface-700 dark:text-surface-200"
                           >
                             {roles.map((role) => (
                               <option key={role} value={role}>{ROLE_LABEL[role] ?? role}</option>
@@ -233,7 +234,8 @@ export default function UserManagement() {
                         <button
                           onClick={() => setDeleteTarget(user)}
                           className="text-red-400 hover:text-red-600 text-xs font-medium px-3 py-1.5
-                                     rounded-xl hover:bg-red-50 transition-colors"
+                                     rounded-xl hover:bg-red-50 transition-colors
+                                     dark:hover:bg-red-900/30 dark:hover:text-red-400"
                         >
                           Delete
                         </button>
@@ -251,30 +253,31 @@ export default function UserManagement() {
       {showCreateModal && (
         <div className="fixed inset-0 bg-surface-950/50 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in"
              role="dialog" aria-modal="true" aria-labelledby="create-user-title">
-          <div className="bg-white rounded-3xl shadow-modal w-full max-w-md p-6 animate-scale-in">
-            <h2 id="create-user-title" className="text-lg font-bold text-surface-900 mb-5">Create New User</h2>
+          <div className="bg-white rounded-3xl shadow-modal w-full max-w-md p-6 animate-scale-in
+                          dark:bg-surface-900 dark:border dark:border-surface-800">
+            <h2 id="create-user-title" className="text-lg font-bold text-surface-900 mb-5 dark:text-surface-50">Create New User</h2>
 
             <form onSubmit={handleCreateUser} className="space-y-4">
               <div>
-                <label htmlFor="create-user-name" className="block text-sm font-medium text-surface-700 mb-1">Full Name</label>
+                <label htmlFor="create-user-name" className="block text-sm font-medium text-surface-700 mb-1 dark:text-surface-300">Full Name</label>
                 <input id="create-user-name" type="text" required value={createForm.name}
                        onChange={(e) => setCreateForm({ ...createForm, name: e.target.value })}
                        placeholder="John Doe" className="input-field" />
               </div>
               <div>
-                <label htmlFor="create-user-email" className="block text-sm font-medium text-surface-700 mb-1">Email Address</label>
+                <label htmlFor="create-user-email" className="block text-sm font-medium text-surface-700 mb-1 dark:text-surface-300">Email Address</label>
                 <input id="create-user-email" type="email" required value={createForm.email}
                        onChange={(e) => setCreateForm({ ...createForm, email: e.target.value })}
                        placeholder="user@company.com" className="input-field" />
               </div>
               <div>
-                <label htmlFor="create-user-password" className="block text-sm font-medium text-surface-700 mb-1">Password</label>
+                <label htmlFor="create-user-password" className="block text-sm font-medium text-surface-700 mb-1 dark:text-surface-300">Password</label>
                 <input id="create-user-password" type="password" required minLength={8} value={createForm.password}
                        onChange={(e) => setCreateForm({ ...createForm, password: e.target.value })}
                        placeholder="Min. 8 characters" className="input-field" />
               </div>
               <div>
-                <label htmlFor="create-user-role" className="block text-sm font-medium text-surface-700 mb-1">Role</label>
+                <label htmlFor="create-user-role" className="block text-sm font-medium text-surface-700 mb-1 dark:text-surface-300">Role</label>
                 <select id="create-user-role" value={createForm.role}
                         onChange={(e) => setCreateForm({ ...createForm, role: e.target.value })}
                         className="select-field w-full">
@@ -301,7 +304,7 @@ export default function UserManagement() {
           description={
             <>
               Are you sure you want to delete{" "}
-              <strong className="text-surface-900">{deleteTarget.name}</strong>?
+              <strong className="text-surface-900 dark:text-surface-100">{deleteTarget.name}</strong>?
               This cannot be undone.
             </>
           }

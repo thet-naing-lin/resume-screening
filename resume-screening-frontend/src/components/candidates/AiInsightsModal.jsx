@@ -38,12 +38,14 @@ export default function AiInsightsModal({ resume, onClose }) {
   return (
     <div className="fixed inset-0 bg-surface-950/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
          onClick={onClose}>
-      <div className="bg-white rounded-3xl shadow-modal w-full max-w-2xl max-h-[90vh] flex flex-col animate-scale-in"
+      <div className="bg-white rounded-3xl shadow-modal w-full max-w-2xl max-h-[90vh] flex flex-col animate-scale-in
+                      dark:bg-surface-900 dark:border dark:border-surface-800"
            onClick={(e) => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-100 flex-shrink-0">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-surface-100 flex-shrink-0
+                        dark:border-surface-800">
           <div>
-            <h2 className="font-bold text-surface-900 text-lg">AI Insights</h2>
+            <h2 className="font-bold text-surface-900 text-lg dark:text-surface-50">AI Insights</h2>
             <p className="text-sm text-surface-400">
               {resume.candidate?.name} — {resume.original_filename}
             </p>
@@ -51,7 +53,7 @@ export default function AiInsightsModal({ resume, onClose }) {
           <button
             onClick={onClose}
             className="text-surface-400 hover:text-surface-600 w-8 h-8 flex items-center justify-center
-                       rounded-xl hover:bg-surface-100 transition-colors"
+                       rounded-xl hover:bg-surface-100 transition-colors dark:hover:bg-surface-800"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -110,14 +112,15 @@ export default function AiInsightsModal({ resume, onClose }) {
               {/* Summary */}
               {summary && (
                 <div>
-                  <h3 className="font-semibold text-surface-700 mb-3 flex items-center gap-2">
+                  <h3 className="font-semibold text-surface-700 mb-3 flex items-center gap-2 dark:text-surface-200">
                     <svg className="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                         d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                     Candidate Summary
                   </h3>
-                  <div className="bg-brand-50 border border-brand-100 rounded-2xl p-5 text-sm text-surface-700 leading-relaxed">
+                  <div className="bg-brand-50 border border-brand-100 rounded-2xl p-5 text-sm text-surface-700 leading-relaxed
+                                  dark:bg-brand-900/20 dark:border-brand-800 dark:text-surface-200">
                     {summary}
                   </div>
                 </div>
@@ -126,7 +129,7 @@ export default function AiInsightsModal({ resume, onClose }) {
               {/* Interview Questions */}
               {questions.length > 0 && (
                 <div>
-                  <h3 className="font-semibold text-surface-700 mb-3 flex items-center gap-2">
+                  <h3 className="font-semibold text-surface-700 mb-3 flex items-center gap-2 dark:text-surface-200">
                     <svg className="w-4 h-4 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                         d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -137,7 +140,8 @@ export default function AiInsightsModal({ resume, onClose }) {
                     {questions.map((q, i) => (
                       <div key={i}
                            className="flex gap-3 bg-surface-50 border border-surface-100 rounded-2xl p-4
-                                      text-sm text-surface-700 hover:border-surface-200 transition-colors">
+                                      text-sm text-surface-700 hover:border-surface-200 transition-colors
+                                      dark:bg-surface-800 dark:border-surface-700 dark:text-surface-200 dark:hover:border-surface-600">
                         <span className="font-bold text-brand-500 flex-shrink-0 w-6 text-right">
                           {i + 1}.
                         </span>
@@ -151,7 +155,7 @@ export default function AiInsightsModal({ resume, onClose }) {
               {/* Empty state */}
               {!hasInsights && !loading && (
                 <div className="flex flex-col items-center justify-center py-12 text-surface-400">
-                  <div className="w-14 h-14 bg-surface-100 rounded-2xl flex items-center justify-center mb-4">
+                  <div className="w-14 h-14 bg-surface-100 rounded-2xl flex items-center justify-center mb-4 dark:bg-surface-800">
                     <svg className="w-7 h-7 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                         d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -162,8 +166,9 @@ export default function AiInsightsModal({ resume, onClose }) {
                 </div>
               )}
 
-              <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-center">
-                <p className="text-xs text-amber-700 font-medium leading-relaxed">
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 text-center
+                              dark:bg-amber-900/20 dark:border-amber-800">
+                <p className="text-xs text-amber-700 font-medium leading-relaxed dark:text-amber-400">
                   AI-generated content: Use as decision support only. Human verification is required before any hiring decision.
                 </p>
               </div>

@@ -5,16 +5,16 @@ import { getAuditLogs } from "../../api/auditApi";
 
 function ActionBadge({ action }) {
   const color = action.startsWith("auth")
-    ? "bg-blue-50 text-blue-700 border-blue-200"
+    ? "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800"
     : action.startsWith("resume")
-      ? "bg-purple-50 text-purple-700 border-purple-200"
+      ? "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800"
       : action.startsWith("job")
-        ? "bg-amber-50 text-amber-700 border-amber-200"
+        ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800"
         : action.startsWith("candidate")
-          ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+          ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800"
           : action.startsWith("ai")
-            ? "bg-brand-50 text-brand-700 border-brand-200"
-            : "bg-surface-100 text-surface-600 border-surface-200";
+            ? "bg-brand-50 text-brand-700 border-brand-200 dark:bg-brand-900/30 dark:text-brand-400 dark:border-brand-800"
+            : "bg-surface-100 text-surface-600 border-surface-200 dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700";
   return (
     <span className={`badge border ${color}`}>{action}</span>
   );
@@ -43,7 +43,8 @@ function DetailsCell({ metadata }) {
     <>
       <button onClick={() => setShowModal(true)}
               className="text-left text-xs font-mono bg-surface-100 hover:bg-brand-50 hover:text-brand-700
-                         px-3 py-1.5 rounded-xl transition-colors w-full max-w-[200px] truncate block"
+                         px-3 py-1.5 rounded-xl transition-colors w-full max-w-[200px] truncate block
+                         dark:bg-surface-800 dark:text-surface-300 dark:hover:bg-brand-900/30 dark:hover:text-brand-400"
               title="Click to view full details">
         {preview}
       </button>
@@ -51,23 +52,26 @@ function DetailsCell({ metadata }) {
         <div className="fixed inset-0 bg-surface-950/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
              onClick={() => setShowModal(false)}
              role="dialog" aria-modal="true" aria-labelledby="audit-details-title">
-          <div className="bg-white rounded-3xl shadow-modal w-full max-w-md p-6 animate-scale-in"
+          <div className="bg-white rounded-3xl shadow-modal w-full max-w-md p-6 animate-scale-in
+                          dark:bg-surface-900 dark:border dark:border-surface-800"
                onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
-              <h3 id="audit-details-title" className="font-bold text-surface-900">Log Details</h3>
+              <h3 id="audit-details-title" className="font-bold text-surface-900 dark:text-surface-50">Log Details</h3>
               <button ref={closeRef} onClick={() => setShowModal(false)}
                       className="text-surface-400 hover:text-surface-600 text-xl w-8 h-8 flex items-center
                                  justify-center rounded-xl hover:bg-surface-100 transition-colors
-                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+                                 dark:hover:bg-surface-800 dark:hover:text-surface-300"
                       aria-label="Close details">✕</button>
             </div>
             <div className="space-y-2">
               {entries.map(([key, value]) => (
-                <div key={key} className="flex gap-3 py-2 border-b border-surface-100 last:border-0">
+                <div key={key} className="flex gap-3 py-2 border-b border-surface-100 last:border-0
+                                          dark:border-surface-800">
                   <span className="text-xs font-semibold text-surface-500 w-32 flex-shrink-0 uppercase tracking-wide">
                     {key.replace(/_/g, " ")}
                   </span>
-                  <span className="text-sm text-surface-800 break-all">{String(value)}</span>
+                  <span className="text-sm text-surface-800 break-all dark:text-surface-200">{String(value)}</span>
                 </div>
               ))}
             </div>
@@ -122,8 +126,9 @@ export default function AuditLogsPage() {
         </div>
 
         {/* Filter Panel */}
-        <div className="bg-surface-50 border border-surface-200 rounded-3xl p-5 mb-6">
-          <h2 className="text-sm font-semibold text-surface-700 mb-4 flex items-center gap-2">
+        <div className="bg-surface-50 border border-surface-200 rounded-3xl p-5 mb-6
+                        dark:bg-surface-900 dark:border-surface-800">
+          <h2 className="text-sm font-semibold text-surface-700 mb-4 flex items-center gap-2 dark:text-surface-200">
             <svg className="w-4 h-4 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -157,17 +162,19 @@ export default function AuditLogsPage() {
         </div>
 
         {loading && (
-          <div className="bg-white rounded-3xl border border-surface-200 p-12 text-center shadow-card">
+          <div className="bg-white rounded-3xl border border-surface-200 p-12 text-center shadow-card
+                          dark:bg-surface-900 dark:border-surface-800">
             <div className="animate-pulse space-y-3">
               {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="h-10 bg-surface-100 rounded-xl" />
+                <div key={i} className="h-10 bg-surface-100 rounded-xl dark:bg-surface-800" />
               ))}
             </div>
           </div>
         )}
 
         {!loading && logs.length === 0 && (
-          <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card">
+          <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card
+                          dark:bg-surface-900 dark:border-surface-800">
             <p className="text-4xl mb-4" aria-hidden="true">📋</p>
             <p className="font-semibold text-surface-500">No audit logs found.</p>
           </div>
@@ -201,14 +208,14 @@ export default function AuditLogsPage() {
                         })}
                       </td>
                       <td>
-                        <p className="font-semibold text-surface-900">{log.user?.name ?? "System"}</p>
+                        <p className="font-semibold text-surface-900 dark:text-surface-100">{log.user?.name ?? "System"}</p>
                         <p className="text-xs text-surface-400">{log.user?.email ?? "—"}</p>
                       </td>
                       <td><ActionBadge action={log.action} /></td>
                       <td>
                         {log.target_label ? (
                           <div>
-                            <p className="text-sm text-surface-800 font-medium">{log.target_label}</p>
+                            <p className="text-sm text-surface-800 font-medium dark:text-surface-200">{log.target_label}</p>
                             <p className="text-xs text-surface-400">{log.target_type} #{log.target_id}</p>
                           </div>
                         ) : <span className="text-surface-300">—</span>}
@@ -222,14 +229,15 @@ export default function AuditLogsPage() {
             </div>
 
             {meta && meta.last_page > 1 && (
-              <div className="flex items-center justify-center gap-2 px-6 py-4 border-t border-surface-100">
+              <div className="flex items-center justify-center gap-2 px-6 py-4 border-t border-surface-100 dark:border-surface-800">
                 <button
                   onClick={() => fetchLogs(currentPage - 1)}
                   disabled={currentPage === 1}
                   className="w-9 h-9 rounded-xl text-sm font-medium transition-all
                              bg-white text-surface-600 border border-surface-200 hover:bg-surface-50
                              disabled:opacity-30 disabled:cursor-not-allowed
-                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+                             dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700 dark:hover:bg-surface-700"
                   aria-label="Previous page"
                 >
                   ‹
@@ -239,7 +247,7 @@ export default function AuditLogsPage() {
                           className={`w-9 h-9 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 ${
                             page === currentPage
                               ? "bg-brand-500 text-white shadow-md shadow-brand-500/20"
-                              : "bg-white text-surface-600 border border-surface-200 hover:bg-surface-50"
+                              : "bg-white text-surface-600 border border-surface-200 hover:bg-surface-50 dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700 dark:hover:bg-surface-700"
                           }`}>
                     {page}
                   </button>
@@ -250,7 +258,8 @@ export default function AuditLogsPage() {
                   className="w-9 h-9 rounded-xl text-sm font-medium transition-all
                              bg-white text-surface-600 border border-surface-200 hover:bg-surface-50
                              disabled:opacity-30 disabled:cursor-not-allowed
-                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                             focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+                             dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700 dark:hover:bg-surface-700"
                   aria-label="Next page"
                 >
                   ›

@@ -31,11 +31,11 @@ function StatCard({ label, value, icon, accent, sub, loading }) {
     <div className="stat-card group">
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <p className="text-sm font-medium text-surface-500">{label}</p>
+          <p className="text-sm font-medium text-surface-500 dark:text-surface-400">{label}</p>
           {loading ? (
-            <div className="h-10 w-20 bg-surface-100 rounded-xl animate-pulse mt-1.5" />
+            <div className="h-10 w-20 bg-surface-100 rounded-xl animate-pulse mt-1.5 dark:bg-surface-800" />
           ) : (
-            <p className="text-[32px] font-bold text-surface-900 mt-1.5 tracking-tight">
+            <p className="text-[32px] font-bold text-surface-900 mt-1.5 tracking-tight dark:text-surface-50">
               {value}
             </p>
           )}
@@ -113,12 +113,12 @@ function ActivityItem({ action, metadata, time }) {
   };
 
   return (
-    <div className="flex items-start gap-3 py-3 border-b border-surface-50 last:border-0">
+    <div className="flex items-start gap-3 py-3 border-b border-surface-50 last:border-0 dark:border-surface-800">
       <div className={`w-9 h-9 ${cfg.color} rounded-xl flex items-center justify-center shrink-0 mt-0.5`}>
         {cfg.icon}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-sm text-surface-700 font-medium">{label}</p>
+        <p className="text-sm text-surface-700 font-medium dark:text-surface-200">{label}</p>
         <p className="text-xs text-surface-400 mt-0.5">{formatTime(time)}</p>
       </div>
     </div>
@@ -252,8 +252,8 @@ export default function Dashboard() {
         {/* Bottom two columns */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Quick Actions */}
-          <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6">
-            <h3 className="text-base font-semibold text-surface-900 mb-5">
+          <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6 dark:bg-surface-900 dark:border-surface-800">
+            <h3 className="text-base font-semibold text-surface-900 mb-5 dark:text-surface-50">
               Quick Actions
             </h3>
             <div className="space-y-2">
@@ -296,34 +296,36 @@ export default function Dashboard() {
                 },
               ].map((action) => {
                 const bgMap = {
-                  blue: "bg-blue-50",
-                  violet: "bg-violet-50",
-                  emerald: "bg-emerald-50",
+                  blue: "bg-blue-50 dark:bg-blue-900/30",
+                  violet: "bg-violet-50 dark:bg-violet-900/30",
+                  emerald: "bg-emerald-50 dark:bg-emerald-900/30",
                 };
                 const textMap = {
-                  blue: "text-blue-600",
-                  violet: "text-violet-600",
-                  emerald: "text-emerald-600",
+                  blue: "text-blue-600 dark:text-blue-400",
+                  violet: "text-violet-600 dark:text-violet-400",
+                  emerald: "text-emerald-600 dark:text-emerald-400",
                 };
                 return (
                   <Link
                     key={action.label}
                     to={action.to}
                     className="flex items-center gap-4 p-4 rounded-2xl hover:bg-surface-50
-                               border border-transparent hover:border-surface-100 transition-all group"
+                               border border-transparent hover:border-surface-100 transition-all group
+                               dark:hover:bg-surface-800 dark:hover:border-surface-700"
                   >
                     <span className={`w-11 h-11 ${bgMap[action.accent]} ${textMap[action.accent]} rounded-2xl
                                        flex items-center justify-center shrink-0`}>
                       {action.icon}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-surface-800 group-hover:text-brand-600 transition-colors">
+                      <p className="text-sm font-semibold text-surface-800 group-hover:text-brand-600 transition-colors
+                                    dark:text-surface-100 dark:group-hover:text-brand-400">
                         {action.label}
                       </p>
                       <p className="text-xs text-surface-400">{action.desc}</p>
                     </div>
                     <svg className="w-4 h-4 text-surface-300 group-hover:text-brand-400 group-hover:translate-x-0.5
-                                    ml-auto transition-all shrink-0"
+                                    ml-auto transition-all shrink-0 dark:text-surface-600"
                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
@@ -334,8 +336,8 @@ export default function Dashboard() {
           </div>
 
           {/* Recent Activity */}
-          <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6">
-            <h3 className="text-base font-semibold text-surface-900 mb-5">
+          <div className="bg-white rounded-3xl border border-surface-200 shadow-card p-6 dark:bg-surface-900 dark:border-surface-800">
+            <h3 className="text-base font-semibold text-surface-900 mb-5 dark:text-surface-50">
               Recent Activity
             </h3>
 
@@ -344,10 +346,10 @@ export default function Dashboard() {
               <div className="space-y-3">
                 {[1, 2, 3].map((i) => (
                   <div key={i} className="flex gap-3 items-center py-2">
-                    <div className="w-9 h-9 bg-surface-100 rounded-xl animate-pulse shrink-0" />
+                    <div className="w-9 h-9 bg-surface-100 rounded-xl animate-pulse shrink-0 dark:bg-surface-800" />
                     <div className="flex-1 space-y-1.5">
-                      <div className="h-3.5 bg-surface-100 rounded animate-pulse w-3/4" />
-                      <div className="h-2.5 bg-surface-100 rounded animate-pulse w-1/3" />
+                      <div className="h-3.5 bg-surface-100 rounded animate-pulse w-3/4 dark:bg-surface-800" />
+                      <div className="h-2.5 bg-surface-100 rounded animate-pulse w-1/3 dark:bg-surface-800" />
                     </div>
                   </div>
                 ))}
@@ -357,7 +359,7 @@ export default function Dashboard() {
             {/* Empty state */}
             {!statsLoading && recentActivity.length === 0 && (
               <div className="flex flex-col items-center justify-center py-10 text-center">
-                <div className="w-14 h-14 bg-surface-100 rounded-2xl flex items-center justify-center mb-4">
+                <div className="w-14 h-14 bg-surface-100 rounded-2xl flex items-center justify-center mb-4 dark:bg-surface-800">
                   <svg className="w-7 h-7 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
                       d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

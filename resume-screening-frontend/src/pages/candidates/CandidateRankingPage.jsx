@@ -16,10 +16,10 @@ import { getMailTemplate } from "../../api/candidateMailApi";
 function ScoreBadge({ score }) {
   const color =
     score >= 75
-      ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+      ? "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800"
       : score >= 50
-        ? "bg-amber-50 text-amber-700 border-amber-200"
-        : "bg-red-50 text-red-700 border-red-200";
+        ? "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800"
+        : "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800";
   return (
     <span className={`badge border ${color}`}>
       {Number(score).toFixed(1)}
@@ -29,9 +29,9 @@ function ScoreBadge({ score }) {
 
 function StatusBadge({ status }) {
   const map = {
-    shortlisted: { style: "bg-emerald-50 text-emerald-700 border-emerald-200", label: "Shortlisted" },
-    under_review: { style: "bg-blue-50 text-blue-700 border-blue-200", label: "Under Review" },
-    rejected: { style: "bg-red-50 text-red-700 border-red-200", label: "Rejected" },
+    shortlisted: { style: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800", label: "Shortlisted" },
+    under_review: { style: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800", label: "Under Review" },
+    rejected: { style: "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800", label: "Rejected" },
   };
   const cfg = map[status] ?? map["under_review"];
   return (
@@ -155,7 +155,7 @@ export default function CandidateRankingPage() {
 
         {/* Job Selector */}
         <div className="mb-6">
-          <label className="block text-sm font-medium text-surface-700 mb-1.5">
+          <label className="block text-sm font-medium text-surface-700 mb-1.5 dark:text-surface-300">
             Job Position
           </label>
           <select
@@ -174,8 +174,9 @@ export default function CandidateRankingPage() {
         {selectedJob && (
           <>
             {/* Filter Panel */}
-            <div className="bg-surface-50 border border-surface-200 rounded-3xl p-5 mb-6">
-              <h2 className="text-sm font-semibold text-surface-700 mb-4 flex items-center gap-2">
+            <div className="bg-surface-50 border border-surface-200 rounded-3xl p-5 mb-6
+                            dark:bg-surface-900 dark:border-surface-800">
+              <h2 className="text-sm font-semibold text-surface-700 mb-4 flex items-center gap-2 dark:text-surface-200">
                 <svg className="w-4 h-4 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                     d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -218,17 +219,18 @@ export default function CandidateRankingPage() {
             {/* Results count */}
             {!loading && meta && (
               <p className="text-sm text-surface-500 mb-3">
-                Showing <strong className="text-surface-700">{candidates.length}</strong> of{" "}
-                <strong className="text-surface-700">{meta.total}</strong> candidates
+                Showing <strong className="text-surface-700 dark:text-surface-200">{candidates.length}</strong> of{" "}
+                <strong className="text-surface-700 dark:text-surface-200">{meta.total}</strong> candidates
               </p>
             )}
 
             {/* Loading */}
             {loading && (
-              <div className="bg-white rounded-3xl border border-surface-200 p-12 shadow-card">
+              <div className="bg-white rounded-3xl border border-surface-200 p-12 shadow-card
+                              dark:bg-surface-900 dark:border-surface-800">
                 <div className="animate-pulse space-y-4">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="h-12 bg-surface-100 rounded-2xl" />
+                    <div key={i} className="h-12 bg-surface-100 rounded-2xl dark:bg-surface-800" />
                   ))}
                 </div>
               </div>
@@ -236,7 +238,8 @@ export default function CandidateRankingPage() {
 
             {/* Empty state */}
             {!loading && !error && candidates.length === 0 && (
-              <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card">
+              <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card
+                              dark:bg-surface-900 dark:border-surface-800">
                 <p className="text-4xl mb-4" aria-hidden="true">🔎</p>
                 <p className="font-semibold text-surface-500">No candidates found.</p>
                 <p className="text-sm text-surface-400 mt-1">
@@ -302,19 +305,19 @@ export default function CandidateRankingPage() {
                         <tr key={item.resume_id}>
                           <td className="font-mono text-lg font-semibold">{getRankMedal(index)}</td>
                           <td>
-                            <p className="font-semibold text-surface-900">{item.candidate.name}</p>
+                            <p className="font-semibold text-surface-900 dark:text-surface-100">{item.candidate.name}</p>
                             <p className="text-surface-400 text-xs">{item.candidate.email}</p>
                             <p className="text-surface-400 text-xs truncate max-w-[180px]">
                               <span aria-hidden="true">📄</span> {item.original_filename}
                             </p>
                           </td>
-                          <td className="text-center text-surface-600">
+                          <td className="text-center text-surface-600 dark:text-surface-300">
                             {item.candidate.experience_years != null ? `${item.candidate.experience_years} yr` : "—"}
                           </td>
                           <td className="text-center"><ScoreBadge score={item.score.tfidf_score} /></td>
                           <td className="text-center"><ScoreBadge score={item.score.semantic_score} /></td>
                           <td className="text-center">
-                            <span className="text-lg font-bold text-surface-900">
+                            <span className="text-lg font-bold text-surface-900 dark:text-surface-50">
                               {Number(item.score.final_score).toFixed(1)}
                             </span>
                             <span className="text-xs text-surface-400"> /100</span>
@@ -328,7 +331,7 @@ export default function CandidateRankingPage() {
                                 onChange={(e) => handleStatusChange(item.resume_id, e.target.value)}
                                 className="border border-surface-200 rounded-xl px-2 py-1 text-xs w-full max-w-[120px]
                                            disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-brand-500/30
-                                           bg-white text-surface-700"
+                                           bg-white text-surface-700 dark:bg-surface-800 dark:border-surface-700 dark:text-surface-200"
                               >
                                 <option value="shortlisted">Shortlist</option>
                                 <option value="under_review">Under Review</option>
@@ -337,14 +340,16 @@ export default function CandidateRankingPage() {
                               <button onClick={() => setAiTarget(item)}
                                       className="text-xs bg-brand-50 text-brand-700 hover:bg-brand-100
                                                  px-3 py-1.5 rounded-xl transition-colors w-full max-w-[120px]
-                                                 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                                 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+                                                 dark:bg-brand-900/30 dark:text-brand-400 dark:hover:bg-brand-900/50"
                                       aria-label={`AI Insights for ${item.candidate.name}`}>
                                 <span aria-hidden="true">✨</span> AI Insights
                               </button>
                               <button onClick={() => setMailTarget(item)}
                                       className="text-xs bg-emerald-50 text-emerald-700 hover:bg-emerald-100
                                                  px-3 py-1.5 rounded-xl transition-colors w-full max-w-[120px]
-                                                 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30"
+                                                 font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30
+                                                 dark:bg-emerald-900/30 dark:text-emerald-400 dark:hover:bg-emerald-900/50"
                                       aria-label={`Send mail to ${item.candidate.name}`}>
                                 <span aria-hidden="true">✉️</span> Send Mail
                               </button>
@@ -358,14 +363,15 @@ export default function CandidateRankingPage() {
 
                 {/* Pagination */}
                 {meta && meta.last_page > 1 && (
-                  <div className="flex items-center justify-center gap-2 px-6 py-4 border-t border-surface-100">
+                  <div className="flex items-center justify-center gap-2 px-6 py-4 border-t border-surface-100 dark:border-surface-800">
                     <button
                       onClick={() => refetch(meta.current_page - 1)}
                       disabled={meta.current_page === 1}
                       className="w-9 h-9 rounded-xl text-sm font-medium transition-all
                                  bg-white text-surface-600 border border-surface-200 hover:bg-surface-50
                                  disabled:opacity-30 disabled:cursor-not-allowed
-                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+                                 dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700 dark:hover:bg-surface-700"
                       aria-label="Previous page"
                     >
                       ‹
@@ -377,7 +383,7 @@ export default function CandidateRankingPage() {
                         className={`w-9 h-9 rounded-xl text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 ${
                           page === meta.current_page
                             ? "bg-brand-500 text-white shadow-md shadow-brand-500/20"
-                            : "bg-white text-surface-600 border border-surface-200 hover:bg-surface-50"
+                            : "bg-white text-surface-600 border border-surface-200 hover:bg-surface-50 dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700 dark:hover:bg-surface-700"
                         }`}
                       >
                         {page}
@@ -389,7 +395,8 @@ export default function CandidateRankingPage() {
                       className="w-9 h-9 rounded-xl text-sm font-medium transition-all
                                  bg-white text-surface-600 border border-surface-200 hover:bg-surface-50
                                  disabled:opacity-30 disabled:cursor-not-allowed
-                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30"
+                                 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
+                                 dark:bg-surface-800 dark:text-surface-300 dark:border-surface-700 dark:hover:bg-surface-700"
                       aria-label="Next page"
                     >
                       ›
