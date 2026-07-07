@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { authApi } from "../api/auth";
 import api from "../api/axios";
+import { preloadRoutes } from "../utils/preloadRoutes";
 
 // stores user + token globally via Zustand
 
@@ -22,6 +23,10 @@ const useAuthStore = create((set) => ({
       localStorage.setItem("user", JSON.stringify(user));
 
       set({ user, token, loading: false });
+
+      // Pre-load all route components in the background for instant navigation
+      preloadRoutes();
+
       return { success: true };
     } catch (error) {
       const message =
@@ -72,6 +77,10 @@ const useAuthStore = create((set) => ({
       const user = res.data.user ?? res.data; // handle both { user: {...} } and direct object
       localStorage.setItem("user", JSON.stringify(user));
       set({ user, token, isAuthenticated: true, error: null });
+
+      // Pre-load all route components in the background for instant navigation
+      preloadRoutes();
+
       return { success: true };
     } catch {
       localStorage.removeItem("token");
