@@ -45,10 +45,10 @@ export default function Header({ onMenuClick }) {
                         dark:bg-surface-950/80 dark:border-surface-800">
       {/* Left: hamburger (mobile) + page title */}
       <div className="flex items-center gap-4">
-        {/* Mobile menu button */}
+        {/* Mobile menu button — only on screens below md (768px) */}
         <button
           onClick={onMenuClick}
-          className="lg:hidden p-2 rounded-xl text-surface-400 hover:text-surface-700
+          className="md:hidden p-2 rounded-xl text-surface-400 hover:text-surface-700
                      hover:bg-surface-100 transition-all dark:hover:text-surface-200 dark:hover:bg-surface-800"
           aria-label="Open menu"
         >

@@ -82,7 +82,7 @@ export default function ViewJob() {
           </div>
 
           {/* Two-column details skeleton */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {/* Description */}
             <div className="lg:col-span-2 bg-white rounded-3xl border border-surface-200 shadow-card p-6 md:p-8">
               <div className="flex items-center gap-2 mb-4">

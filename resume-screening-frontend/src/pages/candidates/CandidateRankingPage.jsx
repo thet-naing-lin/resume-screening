@@ -161,7 +161,7 @@ export default function CandidateRankingPage() {
           <select
             value={selectedJob}
             onChange={(e) => { setSelectedJob(e.target.value); handleClearFilters(); }}
-            className="select-field w-80"
+            className="select-field w-full sm:w-80"
             disabled={jobsLoading}
           >
             <option value="">{jobsLoading ? "Loading jobs..." : "-- Choose a job --"}</option>
@@ -261,7 +261,7 @@ export default function CandidateRankingPage() {
                       💡 For AI Insights, need VPN in Myanmar
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2">
                     <button onClick={() => openBulk("shortlisted")}
                             className="btn-secondary !text-brand-600 !border-brand-200 hover:!bg-brand-50">
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
