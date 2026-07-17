@@ -1,5 +1,22 @@
 import { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
+import {
+  HiOutlineBriefcase,
+  HiOutlineDocumentText,
+  HiOutlineUsers,
+  HiOutlineStar,
+  HiOutlineChevronRight,
+  HiOutlineArrowUpTray,
+  HiOutlineClock,
+  HiOutlinePlus,
+  HiOutlinePencilSquare,
+  HiOutlineCheckCircle,
+  HiOutlineSparkles,
+  HiOutlineArrowRightOnRectangle,
+  HiOutlineArrowLeftOnRectangle,
+  HiOutlineTrash,
+  HiOutlineInformationCircle,
+} from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import useAuthStore from "../../store/authStore";
 import { getDashboardStats } from "../../api/dashboardApi";
@@ -55,30 +72,14 @@ function StatCard({ label, value, icon, accent, sub, loading }) {
 // ── Activity Item ─────────────────────────────────────────────
 function ActivityItem({ action, metadata, time }) {
   const config = {
-    "auth.login": { color: "bg-blue-50 text-blue-600", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" /></svg>
-    )},
-    "auth.logout": { color: "bg-slate-50 text-slate-500", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
-    )},
-    "resume.uploaded": { color: "bg-violet-50 text-violet-600", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-    )},
-    "resume.deleted": { color: "bg-red-50 text-red-500", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-    )},
-    "job.created": { color: "bg-amber-50 text-amber-600", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-    )},
-    "job.updated": { color: "bg-amber-50 text-amber-600", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
-    )},
-    "candidate.status_changed": { color: "bg-emerald-50 text-emerald-600", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-    )},
-    "ai.insights_generated": { color: "bg-brand-50 text-brand-600", icon: (
-      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
-    )},
+    "auth.login": { color: "bg-blue-50 text-blue-600", icon: <HiOutlineArrowLeftOnRectangle className="w-4 h-4" /> },
+    "auth.logout": { color: "bg-slate-50 text-slate-500", icon: <HiOutlineArrowRightOnRectangle className="w-4 h-4" /> },
+    "resume.uploaded": { color: "bg-violet-50 text-violet-600", icon: <HiOutlineArrowUpTray className="w-4 h-4" /> },
+    "resume.deleted": { color: "bg-red-50 text-red-500", icon: <HiOutlineTrash className="w-4 h-4" /> },
+    "job.created": { color: "bg-amber-50 text-amber-600", icon: <HiOutlinePlus className="w-4 h-4" /> },
+    "job.updated": { color: "bg-amber-50 text-amber-600", icon: <HiOutlinePencilSquare className="w-4 h-4" /> },
+    "candidate.status_changed": { color: "bg-emerald-50 text-emerald-600", icon: <HiOutlineCheckCircle className="w-4 h-4" /> },
+    "ai.insights_generated": { color: "bg-brand-50 text-brand-600", icon: <HiOutlineSparkles className="w-4 h-4" /> },
   };
 
   const descriptions = {
@@ -93,9 +94,7 @@ function ActivityItem({ action, metadata, time }) {
     "ai.insights_generated": `AI insights generated${metadata?.job_title ? ` for ${metadata.job_title}` : ""}`,
   };
 
-  const cfg = config[action] ?? { color: "bg-surface-100 text-surface-500", icon: (
-    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-  )};
+  const cfg = config[action] ?? { color: "bg-surface-100 text-surface-500", icon: <HiOutlineInformationCircle className="w-4 h-4" /> };
 
   const label = descriptions[action] ?? action.replace(/\./g, " → ");
 
@@ -163,12 +162,7 @@ export default function Dashboard() {
         ? `${stats.active_jobs} active position${stats.active_jobs > 1 ? "s" : ""}`
         : "No active jobs yet",
       accent: "blue",
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      ),
+      icon: <HiOutlineBriefcase className="w-6 h-6" />,
     },
     {
       label: "Total Resumes",
@@ -177,12 +171,7 @@ export default function Dashboard() {
         ? `${stats.total_resumes} resume${stats.total_resumes > 1 ? "s" : ""} uploaded`
         : "No resumes uploaded yet",
       accent: "violet",
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-        </svg>
-      ),
+      icon: <HiOutlineDocumentText className="w-6 h-6" />,
     },
     {
       label: "Candidates Screened",
@@ -191,12 +180,7 @@ export default function Dashboard() {
         ? `${stats.candidates_screened} scored`
         : "No candidates screened yet",
       accent: "emerald",
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-        </svg>
-      ),
+      icon: <HiOutlineUsers className="w-6 h-6" />,
     },
     {
       label: "Avg Match Score",
@@ -205,12 +189,7 @@ export default function Dashboard() {
         ? "Average across all jobs"
         : "Score after AI screening",
       accent: "amber",
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-            d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-        </svg>
-      ),
+      icon: <HiOutlineStar className="w-6 h-6" />,
     },
   ];
 
@@ -263,36 +242,21 @@ export default function Dashboard() {
                   desc: "Create a job description for screening",
                   to: "/jobs",
                   accent: "blue",
-                  icon: (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                        d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  ),
+                  icon: <HiOutlineBriefcase className="w-5 h-5" />,
                 },
                 {
                   label: "Upload Resumes",
                   desc: "Bulk upload resumes for a job",
                   to: "/resumes",
                   accent: "violet",
-                  icon: (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                    </svg>
-                  ),
+                  icon: <HiOutlineArrowUpTray className="w-5 h-5" />,
                 },
                 {
                   label: "View Candidates",
                   desc: "See ranked and scored candidates",
                   to: "/candidate-rankings",
                   accent: "emerald",
-                  icon: (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                  ),
+                  icon: <HiOutlineUsers className="w-5 h-5" />,
                 },
               ].map((action) => {
                 const bgMap = {
@@ -324,11 +288,8 @@ export default function Dashboard() {
                       </p>
                       <p className="text-xs text-surface-400">{action.desc}</p>
                     </div>
-                    <svg className="w-4 h-4 text-surface-300 group-hover:text-brand-400 group-hover:translate-x-0.5
-                                    ml-auto transition-all shrink-0 dark:text-surface-600"
-                         fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                    <HiOutlineChevronRight className="w-4 h-4 text-surface-300 group-hover:text-brand-400 group-hover:translate-x-0.5
+                                    ml-auto transition-all shrink-0 dark:text-surface-600" />
                   </Link>
                 );
               })}
@@ -360,10 +321,7 @@ export default function Dashboard() {
             {!statsLoading && recentActivity.length === 0 && (
               <div className="flex flex-col items-center justify-center py-10 text-center">
                 <div className="w-14 h-14 bg-surface-100 rounded-2xl flex items-center justify-center mb-4 dark:bg-surface-800">
-                  <svg className="w-7 h-7 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <HiOutlineClock className="w-7 h-7 text-surface-400" />
                 </div>
                 <p className="text-sm font-semibold text-surface-500">No activity yet</p>
                 <p className="text-xs text-surface-400 mt-1">Actions will appear as you use the system</p>

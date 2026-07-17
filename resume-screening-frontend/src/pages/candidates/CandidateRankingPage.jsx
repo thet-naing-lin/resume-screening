@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import {
+  HiOutlineFunnel,
+  HiOutlineEnvelope,
+} from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs } from "../../api/jobApi";
 import { useRankings } from "../../hooks/useRankings";
@@ -177,10 +181,7 @@ export default function CandidateRankingPage() {
             <div className="bg-surface-50 border border-surface-200 rounded-3xl p-5 mb-6
                             dark:bg-surface-900 dark:border-surface-800">
               <h2 className="text-sm font-semibold text-surface-700 mb-4 flex items-center gap-2 dark:text-surface-200">
-                <svg className="w-4 h-4 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                </svg>
+                <HiOutlineFunnel className="w-4 h-4 text-surface-400" />
                 Filter Candidates
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -264,18 +265,12 @@ export default function CandidateRankingPage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <button onClick={() => openBulk("shortlisted")}
                             className="btn-secondary !text-brand-600 !border-brand-200 hover:!bg-brand-50">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
+                      <HiOutlineEnvelope className="w-4 h-4" />
                       Email Shortlisted
                     </button>
                     <button onClick={() => openBulk("rejected")}
                             className="btn-secondary !text-red-600 !border-red-200 hover:!bg-red-50">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
+                      <HiOutlineEnvelope className="w-4 h-4" />
                       Email Rejected
                     </button>
                     <button onClick={handleExport} disabled={exporting || candidates.length === 0}

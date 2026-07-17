@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { HiOutlineXMark, HiOutlineInformationCircle } from "react-icons/hi2";
 import { getMailTemplate, sendCandidateMail } from "../../api/candidateMailApi";
 
 export default function SendMailModal({ resume, jobTitle, onClose }) {
@@ -70,9 +71,7 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
                   className="w-8 h-8 flex items-center justify-center rounded-xl text-surface-400
                              hover:bg-surface-100 hover:text-surface-600 transition-colors
                              dark:hover:bg-surface-800 dark:hover:text-surface-300">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <HiOutlineXMark className="w-5 h-5" />
           </button>
         </div>
 
@@ -122,10 +121,7 @@ export default function SendMailModal({ resume, jobTitle, onClose }) {
                   placeholder="candidate@email.com"
                 />
                 <p className="text-xs text-amber-600 mt-1.5 flex items-center gap-1 dark:text-amber-400">
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <HiOutlineInformationCircle className="w-3.5 h-3.5" />
                   Verify the email is correct before sending.
                 </p>
               </div>

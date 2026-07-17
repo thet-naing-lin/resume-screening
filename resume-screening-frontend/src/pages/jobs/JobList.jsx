@@ -1,11 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
+import {
+  HiOutlinePlus,
+  HiOutlineMagnifyingGlass,
+  HiOutlineEye,
+  HiOutlinePencilSquare,
+  HiOutlineTrash,
+  HiOutlineMapPin,
+} from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs, deleteJob } from "../../api/jobApi";
 import DeleteModal from "../../components/common/DeleteModal";
-import { BsTrash } from "react-icons/bs";
-import { FaRegEye, FaUserEdit } from "react-icons/fa";
 
 // ── Badge helpers ──
 const EXP_BADGE = {
@@ -97,9 +103,7 @@ export default function JobList() {
             <p>Manage all job postings for resume screening.</p>
           </div>
           <button onClick={() => navigate("/jobs/create")} className="btn-primary">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
+            <HiOutlinePlus className="w-4 h-4" />
             New Job Description
           </button>
         </div>
@@ -149,9 +153,7 @@ export default function JobList() {
         ) : (
           <div className="filter-bar">
             <div className="search-input-wrapper">
-              <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-              </svg>
+              <HiOutlineMagnifyingGlass className="w-4 h-4" aria-hidden="true" />
               <input
                 type="text"
                 placeholder="Search by title or location..."
@@ -274,12 +276,7 @@ export default function JobList() {
                         </Link>
                         {job.location && (
                           <p className="text-xs text-surface-400 mt-0.5 flex items-center gap-1">
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
+                            <HiOutlineMapPin className="w-3 h-3" aria-hidden="true" />
                             {job.location}
                           </p>
                         )}
@@ -319,21 +316,21 @@ export default function JobList() {
                                             dark:hover:text-surface-200 dark:hover:bg-surface-800"
                                   aria-label={`View ${job.title}`}
                                   title="View">
-                            <FaRegEye />
+                            <HiOutlineEye />
                           </button>
                           <button onClick={() => navigate(`/jobs/${job.id}/edit`)}
                                   className="text-brand-500 hover:text-brand-700 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-brand-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
                                             dark:hover:bg-brand-900/30 dark:hover:text-brand-400"
                                   aria-label={`Edit ${job.title}`}
                                   title="Edit">
-                            <FaUserEdit />
+                            <HiOutlinePencilSquare />
                           </button>
                           <button onClick={() => setDeleteTarget(job)}
                                   className="text-red-400 hover:text-red-600 text-xs font-medium p-2.5 min-w-[44px] min-h-[44px] rounded-xl hover:bg-red-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500/30
                                             dark:hover:bg-red-900/30 dark:hover:text-red-400"
                                   aria-label={`Delete ${job.title}`}
                                   title="Delete">
-                            <BsTrash />
+                            <HiOutlineTrash />
                           </button>
                         </div>
                       </td>

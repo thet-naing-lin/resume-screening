@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { HiOutlineArrowLeft } from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import ResumeUploadForm from "../../components/ResumeUploadForm";
 
@@ -13,9 +14,7 @@ export default function UploadResume() {
             className="inline-flex items-center gap-1.5 text-sm text-surface-400 hover:text-surface-700 transition-colors mb-3
                        dark:hover:text-surface-200"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <HiOutlineArrowLeft className="w-4 h-4" />
             Back to Resumes
           </Link>
 

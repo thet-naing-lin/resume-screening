@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { HiOutlinePlus } from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getUsers, assignRole, deleteUser, createUser } from "../../api/userApi";
 import DeleteModal from "../../components/common/DeleteModal";
@@ -114,9 +115,7 @@ export default function UserManagement() {
             <p>Manage accounts and assign roles.</p>
           </div>
           <button onClick={() => setShowCreateModal(true)} className="btn-primary">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
+            <HiOutlinePlus className="w-4 h-4" />
             Add User
           </button>
         </div>

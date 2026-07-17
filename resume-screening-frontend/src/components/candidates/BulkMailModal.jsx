@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import toast from "react-hot-toast";
+import { HiOutlineXMark, HiOutlineCheckCircle } from "react-icons/hi2";
 import { sendBulkMail, getBulkPreview } from "../../api/candidateMailApi";
 
 export default function BulkMailModal({
@@ -75,9 +76,7 @@ export default function BulkMailModal({
                     className="w-8 h-8 flex items-center justify-center rounded-xl text-surface-400
                                hover:bg-surface-100 hover:text-surface-600 transition-colors
                                dark:hover:bg-surface-800 dark:hover:text-surface-300">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <HiOutlineXMark className="w-5 h-5" />
             </button>
           </div>
 
@@ -188,9 +187,7 @@ export default function BulkMailModal({
               <div className="flex items-start gap-3 bg-emerald-50 border border-emerald-200
                               text-emerald-800 rounded-2xl px-5 py-4 mb-4
                               dark:bg-emerald-900/20 dark:border-emerald-800 dark:text-emerald-300">
-                <svg className="w-5 h-5 mt-0.5 shrink-0 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+                <HiOutlineCheckCircle className="w-5 h-5 mt-0.5 shrink-0 text-emerald-500 dark:text-emerald-400" />
                 <div>
                   <p className="font-semibold">{result.message}</p>
                   {result.sent_count && (

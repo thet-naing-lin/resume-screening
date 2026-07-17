@@ -1,5 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  HiOutlineLockClosed,
+  HiOutlineCheckCircle,
+  HiOutlineExclamationCircle,
+  HiOutlineArrowLeft,
+} from "react-icons/hi2";
 import api from "../../api/axios";
 
 export default function ForgotPassword() {
@@ -47,10 +53,7 @@ export default function ForgotPassword() {
           <div className="inline-flex items-center justify-center w-16 h-16
                           bg-gradient-to-br from-brand-500 to-brand-600 rounded-2xl mb-5
                           shadow-2xl shadow-brand-500/25">
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
+            <HiOutlineLockClosed className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-white tracking-tight">Forgot Password</h1>
           <p className="text-surface-400 mt-1.5 text-sm">
@@ -63,9 +66,7 @@ export default function ForgotPassword() {
             <div className="text-center space-y-5 animate-scale-in">
               <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20
                               flex items-center justify-center mx-auto">
-                <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                </svg>
+                <HiOutlineCheckCircle className="w-8 h-8 text-emerald-400" />
               </div>
               <div>
                 <h3 className="font-semibold text-white text-lg">Check your email</h3>
@@ -77,9 +78,7 @@ export default function ForgotPassword() {
                 to="/login"
                 className="inline-flex items-center gap-2 text-sm text-brand-400 hover:text-brand-300 transition-colors"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
+                <HiOutlineArrowLeft className="w-4 h-4" />
                 Back to login
               </Link>
             </div>
@@ -88,10 +87,7 @@ export default function ForgotPassword() {
               {error && (
                 <div className="mb-5 flex items-start gap-3 bg-red-500/10 border border-red-500/20
                                 text-red-400 px-4 py-3 rounded-2xl text-sm animate-scale-in">
-                  <svg className="w-5 h-5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <HiOutlineExclamationCircle className="w-5 h-5 mt-0.5 shrink-0" />
                   <span>{error}</span>
                 </div>
               )}
