@@ -2,6 +2,14 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import {
+  HiOutlineCheckCircle,
+  HiOutlineXMark,
+  HiOutlineArrowUpTray,
+  HiOutlineExclamationTriangle,
+  HiOutlineClipboardDocumentCheck,
+} from "react-icons/hi2";
+import { ImSpinner9 } from "react-icons/im";
 import { getJobs } from "../api/jobApi";
 import { uploadResumes } from "../api/resumeApi";
 
@@ -115,9 +123,7 @@ export default function ResumeUploadForm() {
           <div className="w-16 h-16 bg-emerald-50 border border-emerald-200 rounded-2xl
                           flex items-center justify-center mx-auto mb-4
                           dark:bg-emerald-900/30 dark:border-emerald-800">
-            <svg className="w-8 h-8 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
+            <HiOutlineCheckCircle className="w-8 h-8 text-emerald-500 dark:text-emerald-400" />
           </div>
           <h2 className="text-lg font-bold text-surface-900 dark:text-surface-50">{results.message}</h2>
         </div>
@@ -132,9 +138,7 @@ export default function ResumeUploadForm() {
                 <div key={r.id}
                      className="flex items-center gap-3 bg-emerald-50 border border-emerald-100 rounded-2xl px-4 py-3
                                 dark:bg-emerald-900/20 dark:border-emerald-800">
-                  <svg className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                  </svg>
+                  <HiOutlineCheckCircle className="w-4 h-4 text-emerald-500 dark:text-emerald-400 flex-shrink-0" />
                   <span className="text-sm text-surface-700 flex-1 font-medium dark:text-surface-200">{r.filename}</span>
                   <span className="text-xs text-surface-400">#{r.id}</span>
                 </div>
@@ -153,9 +157,7 @@ export default function ResumeUploadForm() {
                 <div key={i}
                      className="flex items-center gap-3 bg-red-50 border border-red-100 rounded-2xl px-4 py-3
                                 dark:bg-red-900/20 dark:border-red-800">
-                  <svg className="w-4 h-4 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <HiOutlineXMark className="w-4 h-4 text-red-400 flex-shrink-0" />
                   <span className="text-sm text-surface-700 flex-1 font-medium dark:text-surface-200">{r.filename}</span>
                   <span className="text-xs text-red-500 dark:text-red-400">{r.error}</span>
                 </div>
@@ -167,10 +169,7 @@ export default function ResumeUploadForm() {
         <div className="flex gap-3 mt-6">
           {uploadedCount > 0 && (
             <Link to="/resumes" className="btn-primary flex-1 justify-center">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-              </svg>
+              <HiOutlineClipboardDocumentCheck className="w-4 h-4" />
               View & Track Progress
             </Link>
           )}
@@ -232,10 +231,7 @@ export default function ResumeUploadForm() {
                             flex items-center justify-center mx-auto mb-4 shadow-sm
                             group-hover:border-brand-200 transition-colors
                             dark:bg-surface-900 dark:border-surface-700">
-              <svg className="w-6 h-6 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5}
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
+              <HiOutlineArrowUpTray className="w-6 h-6 text-brand-500" />
             </div>
             <p className="text-sm font-semibold text-surface-700 dark:text-surface-200">
               {dragging ? "Drop files here!" : "Drag & drop resumes here"}
@@ -292,9 +288,7 @@ export default function ResumeUploadForm() {
                     className="text-surface-300 hover:text-red-500 transition-colors p-2 rounded-xl hover:bg-red-50
                                dark:hover:bg-red-900/30 dark:hover:text-red-400"
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <HiOutlineXMark className="w-4 h-4" />
                   </button>
                 </div>
               ))}
@@ -307,10 +301,7 @@ export default function ResumeUploadForm() {
           <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 text-amber-800
                           text-sm px-5 py-4 rounded-2xl
                           dark:bg-amber-900/20 dark:border-amber-800 dark:text-amber-300">
-            <svg className="w-5 h-5 mt-0.5 flex-shrink-0 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-            </svg>
+            <HiOutlineExclamationTriangle className="w-5 h-5 mt-0.5 flex-shrink-0 text-amber-500 dark:text-amber-400" />
             <div>
               <p className="font-semibold">Too many files selected</p>
               <p className="text-amber-700 mt-0.5 dark:text-amber-400">
@@ -328,19 +319,12 @@ export default function ResumeUploadForm() {
         >
           {loading ? (
             <>
-              <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
+              <ImSpinner9 className="w-5 h-5 animate-spin" />
               Uploading {files.length} file{files.length > 1 ? "s" : ""}...
             </>
           ) : (
             <>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-              </svg>
+              <HiOutlineArrowUpTray className="w-5 h-5" />
               Upload {files.length > 0 ? files.length : ""} Resume{files.length !== 1 ? "s" : ""}
             </>
           )}

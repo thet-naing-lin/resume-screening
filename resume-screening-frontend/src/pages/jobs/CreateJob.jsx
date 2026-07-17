@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { HiOutlineArrowLeft } from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { createJob } from "../../api/jobApi";
 import { SkillTagInput } from "../../components/jobs/JobFormFields";
@@ -89,9 +90,7 @@ export default function CreateJob() {
             className="flex items-center gap-1.5 text-sm text-surface-400 hover:text-surface-700 mb-3 transition-colors
                        dark:hover:text-surface-200"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <HiOutlineArrowLeft className="w-4 h-4" />
             Back to Job Descriptions
           </button>
           <h1 className="text-2xl font-bold text-surface-900 dark:text-surface-50">Create Job Description</h1>

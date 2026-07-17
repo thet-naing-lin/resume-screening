@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
+import {
+  HiOutlineArrowLeft,
+  HiOutlineMapPin,
+  HiOutlinePencilSquare,
+} from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJob } from "../../api/jobApi";
 
@@ -153,9 +158,7 @@ export default function ViewJob() {
           className="inline-flex items-center gap-1.5 text-sm text-surface-400 hover:text-surface-700 mb-5 transition-colors
                      dark:hover:text-surface-200"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
+          <HiOutlineArrowLeft className="w-4 h-4" />
           Back to Job Descriptions
         </button>
 
@@ -170,12 +173,7 @@ export default function ViewJob() {
               <h1 className="text-2xl md:text-3xl font-bold tracking-tight">{job.title}</h1>
               {job.location && (
                 <p className="flex items-center gap-1.5 text-brand-100/70 text-sm mt-2">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                  </svg>
+                  <HiOutlineMapPin className="w-4 h-4" />
                   {job.location}
                 </p>
               )}
@@ -194,10 +192,7 @@ export default function ViewJob() {
                          border border-white/10 rounded-2xl text-sm font-semibold text-white
                          hover:bg-white/25 transition-all shrink-0"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
+              <HiOutlinePencilSquare className="w-4 h-4" />
               Edit
             </Link>
           </div>

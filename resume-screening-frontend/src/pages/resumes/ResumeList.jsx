@@ -2,6 +2,13 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
+import {
+  HiOutlinePlus,
+  HiOutlineMagnifyingGlass,
+  HiOutlineXMark,
+  HiOutlineTrash,
+  HiOutlineNoSymbol,
+} from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import DeleteModal from "../../components/common/DeleteModal";
 import { getResumes, deleteResume } from "../../api/resumeApi";
@@ -148,9 +155,7 @@ export default function ResumeList() {
             <p>All resumes uploaded across all job positions.</p>
           </div>
           <Link to="/resumes/upload" className="btn-primary">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-            </svg>
+            <HiOutlinePlus className="w-4 h-4" />
             Upload Resume
           </Link>
         </div>
@@ -166,9 +171,7 @@ export default function ResumeList() {
         {/* Search + Filter bar */}
         <div className="filter-bar">
           <div className="search-input-wrapper">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z" />
-            </svg>
+            <HiOutlineMagnifyingGlass className="w-4 h-4" aria-hidden="true" />
             <input
               type="text"
               placeholder="Search by candidate name, job, or filename..."
@@ -180,9 +183,7 @@ export default function ResumeList() {
               <button onClick={() => setSearch("")}
                       aria-label="Clear search"
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-surface-400 hover:text-surface-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 rounded">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
+                <HiOutlineXMark className="w-4 h-4" />
               </button>
             )}
           </div>
@@ -318,10 +319,7 @@ export default function ResumeList() {
                         {DELETABLE.includes(resume.status) ? (
                           <button onClick={() => setDeleteTarget(resume)}
                                   className="btn-danger text-xs !py-1.5 !px-3">
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
+                            <HiOutlineTrash className="w-3.5 h-3.5" />
                             Delete
                           </button>
                         ) : (
@@ -329,10 +327,7 @@ export default function ResumeList() {
                                 className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium
                                            text-surface-300 bg-surface-50 rounded-xl cursor-not-allowed
                                            dark:bg-surface-800 dark:text-surface-600">
-                            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                            </svg>
+                            <HiOutlineNoSymbol className="w-3.5 h-3.5" />
                             Locked
                           </span>
                         )}
