@@ -1,0 +1,42 @@
+- generic [ref=f1e1]:
+  - navigation
+  - generic [ref=f1e2]:
+    - generic [ref=f1e3]: Need to log in
+    - heading "Sign in at thetnainglin.goatcounter.com" [level=1] [ref=f1e4]
+    - generic [ref=f1e5]:
+      - generic [ref=f1e6]: Email address
+      - textbox "Email address" [active] [ref=f1e7] [cursor=pointer]
+      - generic [ref=f1e8]: Password
+      - textbox "Password" [ref=f1e9]
+      - button "Sign in" [ref=f1e10] [cursor=pointer]
+    - paragraph [ref=f1e11]:
+      - link "Forgot password?" [ref=f1e12] [cursor=pointer]:
+        - /url: /user/forgot
+  - contentinfo [ref=f1e13]:
+    - generic [ref=f1e14]:
+      - link "Home" [ref=f1e15] [cursor=pointer]:
+        - /url: https://www.goatcounter.com
+      - text: "|"
+      - link "Contact" [ref=f1e16] [cursor=pointer]:
+        - /url: /contact
+      - text: "|"
+      - link "Documentation" [ref=f1e17] [cursor=pointer]:
+        - /url: /help
+      - text: "|"
+      - link "Contribute" [ref=f1e18] [cursor=pointer]:
+        - /url: /contribute
+    - generic [ref=f1e19]:
+      - link "Source code" [ref=f1e20] [cursor=pointer]:
+        - /url: https://github.com/arp242/goatcounter
+      - text: "|"
+      - link "NLnet NGI0" [ref=f1e21] [cursor=pointer]:
+        - /url: https://nlnet.nl/project/GoatCounter/
+      - text: "|"
+      - link "GitHub sponsors" [ref=f1e22] [cursor=pointer]:
+        - /url: https://github.com/sponsors/arp242
+      - text: "|"
+      - link "Product Hunt" [ref=f1e23] [cursor=pointer]:
+        - /url: https://www.producthunt.com/posts/goatcounter
+      - text: "|"
+      - link "AlternativeTo" [ref=f1e24] [cursor=pointer]:
+        - /url: https://alternativeto.net/software/goatcounter/about
