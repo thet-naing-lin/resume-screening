@@ -3,6 +3,16 @@ import { Toaster } from "react-hot-toast";
 import { lazy, Suspense } from "react";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import usePageTracking from "./hooks/usePageTracking";
+
+/**
+ * Tracks page views via GoatCounter on every route change.
+ * Must be nested inside <BrowserRouter> to access useLocation().
+ */
+function PageViewTracker() {
+  usePageTracking();
+  return null;
+}
 
 // Lazy load route components for code splitting
 const Login = lazy(() => import("./pages/auth/Login"));
@@ -53,6 +63,7 @@ const PlaceholderPage = ({ title }) => (
 export default function App() {
   return (
     <BrowserRouter>
+      <PageViewTracker />
       <Toaster
         position="top-right"
         toastOptions={{
