@@ -1,12 +1,9 @@
 # Resume Screening Tool
 
-Automated resume screening platform that scores candidates against job descriptions using NLP and generates AI-powered insights.
+AI-powered resume screening platform that scores candidates against job descriptions using NLP and generates insights — helping recruiters make faster, data-driven hiring decisions.
 
-## For full commit history
-
-Frontend - https://github.com/thet-naing-lin/resume-screening-frontend
-
-Backend - https://github.com/thet-naing-lin/resume-screening-api
+> **Monorepo** — full commit history available in the original repos:  
+> [Frontend](https://github.com/thet-naing-lin/resume-screening-frontend) · [Backend](https://github.com/thet-naing-lin/resume-screening-api)
 
 ## Architecture
 
@@ -14,8 +11,8 @@ The system is split across three services:
 
 | Service | Path | Stack |
 |---------|------|-------|
-| Backend API | `resume-screening-api/` | Laravel 13, MySQL, Sanctum |
-| Frontend SPA | `resume-screening-frontend/` | React 19, Vite, Tailwind CSS |
+| Backend API | `resume-screening-api/` | Laravel 13, PHP 8.3, MySQL, Sanctum |
+| Frontend SPA | `resume-screening-frontend/` | React 19, Vite 8, Tailwind CSS, Zustand |
 | NLP Scorer | `python-scorer/` | Flask, scikit-learn, Sentence-BERT |
 
 ### How scoring works
@@ -25,9 +22,28 @@ Resumes and job descriptions are sent to the Python NLP service, which computes 
 1. **TF-IDF** (40% weight) — keyword-frequency matching
 2. **Semantic** (60% weight) — Sentence-BERT embedding similarity via `all-MiniLM-L6-v2`
 
-The weighted final score is normalised to 0–100.
+The weighted final score is normalised to 0–100. AI insights (candidate summaries and interview questions) are generated via the Google Gemini API.
 
-AI insights (candidate summaries and interview questions) are generated via the Google Gemini API.
+## Project structure
+
+```
+resume-screening/
+├── resume-screening-api/        # Laravel backend
+│   ├── app/Http/Controllers/    # API controllers
+│   ├── app/Services/            # Business logic (Scoring, Gemini, Audit)
+│   ├── database/migrations/     # Database schema
+│   └── routes/api.php           # API routes
+├── resume-screening-frontend/   # React frontend
+│   ├── src/api/                 # API client functions
+│   ├── src/components/          # Shared UI components
+│   ├── src/pages/               # Route-specific pages
+│   ├── src/store/               # Zustand state stores
+│   └── src/utils/               # Helpers (cache, formatting)
+├── python-scorer/               # NLP scoring service
+│   ├── app.py                   # Flask server
+│   └── models/                  # ML models
+└── screenshots/                 # UI screenshots and test reports
+```
 
 ## Screenshots
 
@@ -68,12 +84,14 @@ AI insights (candidate summaries and interview questions) are generated via the 
 
 ## Requirements
 
-- **PHP** 8.3+
-- **Composer** 2.x
-- **Node.js** 18+
-- **MySQL** 8+
-- **Python** 3.9+
-- **Redis** (optional, for caching)
+| Dependency | Version |
+|------------|---------|
+| PHP | 8.3+ |
+| Composer | 2.x |
+| Node.js | 18+ |
+| MySQL | 8+ |
+| Python | 3.9+ |
+| Redis | Optional (queue/cache) |
 
 ## Quick start (local development)
 
@@ -159,8 +177,10 @@ For the frontend (`.env`):
 
 ## Default credentials (after seeding)
 
-- **Admin**: <admin@example.com> / Admin@12345
-- **HR**: <hr@example.com> / asdfasdf
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@resumescreening.com | Admin@12345 |
+| HR | hr@resumescreening.com | asdfasdf |
 
 ## API endpoints
 
@@ -226,6 +246,20 @@ composer run test
 cd resume-screening-frontend
 npm run lint
 ```
+
+## Testing
+
+Automated browser testing performed via Chrome DevTools MCP:
+
+- Login flow and authentication
+- Dashboard stats and recent activity
+- Job descriptions CRUD and filtering
+- Resume upload and listing
+- Candidate rankings
+- User management and role assignment
+- Mobile responsiveness (375px viewport)
+
+See [test report](screenshots/chrome-devtools-test-report.md) for full details.
 
 Each service has its own README with detailed setup instructions and architecture notes.
 
