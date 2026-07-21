@@ -8,6 +8,8 @@ import {
   HiOutlinePencilSquare,
   HiOutlineTrash,
   HiOutlineMapPin,
+  HiOutlineClipboardDocumentList,
+  HiOutlineXMark,
 } from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs, deleteJob } from "../../api/jobApi";
@@ -112,7 +114,9 @@ export default function JobList() {
         {error && (
           <div className="flash-error">
             <span>{error}</span>
-            <button onClick={() => setError("")} className="font-bold ml-4">✕</button>
+            <button onClick={() => setError("")} className="font-bold ml-4" aria-label="Dismiss error">
+              <HiOutlineXMark className="w-4 h-4" />
+            </button>
           </div>
         )}
 
@@ -240,7 +244,7 @@ export default function JobList() {
             </div>
           ) : filtered.length === 0 ? (
             <div className="py-16 text-center">
-              <p className="text-4xl mb-4" aria-hidden="true">📋</p>
+              <HiOutlineClipboardDocumentList className="w-12 h-12 text-surface-300 mx-auto mb-4" />
               <p className="font-semibold text-surface-500">No job descriptions found</p>
               <p className="text-sm text-surface-400 mt-1">
                 {search ? "Try a different search term." : "Create your first job description to get started."}

@@ -13,6 +13,11 @@
     @apply bg-surface-50 text-surface-700 font-sans dark:bg-surface-950 dark:text-surface-200;
   }
 
+  /* All buttons get cursor-pointer by default */
+  button {
+    @apply cursor-pointer;
+  }
+
   /* Custom scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
@@ -56,7 +61,7 @@
   .btn-primary {
     @apply inline-flex items-center gap-2 px-5 py-2.5 bg-brand-500 text-white text-sm
            font-semibold rounded-2xl hover:bg-brand-600 active:bg-brand-700
-           transition-all duration-150 shadow-md shadow-brand-500/20
+           transition-all duration-150 shadow-md shadow-brand-500/20 cursor-pointer
            hover:shadow-lg hover:shadow-brand-500/30;
   }
 
@@ -65,7 +70,7 @@
     @apply inline-flex items-center gap-2 px-5 py-2.5 bg-white text-surface-700 text-sm
            font-medium rounded-2xl border border-surface-200 hover:bg-surface-50
            hover:border-surface-300 active:bg-surface-100 transition-all duration-150
-           dark:bg-surface-800 dark:text-surface-200 dark:border-surface-700
+           cursor-pointer dark:bg-surface-800 dark:text-surface-200 dark:border-surface-700
            dark:hover:bg-surface-700 dark:hover:border-surface-600 dark:active:bg-surface-600;
   }
 
@@ -73,7 +78,7 @@
   .btn-danger {
     @apply inline-flex items-center gap-2 px-5 py-2.5 bg-red-50 text-red-700 text-sm
            font-medium rounded-2xl hover:bg-red-100 active:bg-red-200
-           transition-all duration-150
+           transition-all duration-150 cursor-pointer
            dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50 dark:active:bg-red-900/70;
   }
 
@@ -91,7 +96,7 @@
   .select-field {
     @apply px-4 py-2.5 border border-surface-200 rounded-2xl bg-white text-sm
            text-surface-700 focus:outline-none focus:ring-2 focus:ring-brand-500/30
-           focus:border-brand-300 transition-all duration-150
+           focus:border-brand-300 transition-all duration-150 cursor-pointer
            dark:bg-surface-800 dark:border-surface-700 dark:text-surface-200
            dark:focus:ring-brand-400/30 dark:focus:border-brand-500;
   }
@@ -162,7 +167,7 @@
   /* Stat card */
   .stat-card {
     @apply bg-white rounded-3xl border border-surface-200 shadow-card p-6
-           hover:shadow-elevated transition-shadow duration-200
+           hover:shadow-elevated transition-shadow duration-200 cursor-default
            dark:bg-surface-900 dark:border-surface-800;
   }
 

@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import toast from "react-hot-toast";
-import { HiOutlineFunnel } from "react-icons/hi2";
+import { HiOutlineFunnel, HiOutlineClipboardDocumentList, HiOutlineXMark } from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getAuditLogs } from "../../api/auditApi";
 
@@ -63,7 +63,7 @@ function DetailsCell({ metadata }) {
                                  justify-center rounded-xl hover:bg-surface-100 transition-colors
                                  focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
                                  dark:hover:bg-surface-800 dark:hover:text-surface-300"
-                      aria-label="Close details">✕</button>
+                      aria-label="Close details"><HiOutlineXMark className="w-5 h-5" /></button>
             </div>
             <div className="space-y-2">
               {entries.map(([key, value]) => (
@@ -118,7 +118,7 @@ export default function AuditLogsPage() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto animate-fade-in">
+      <div className="max-w-6xl mx-auto animate-fade-in">
         <div className="page-header">
           <div>
             <h1>Audit Logs</h1>
@@ -173,7 +173,7 @@ export default function AuditLogsPage() {
         {!loading && logs.length === 0 && (
           <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card
                           dark:bg-surface-900 dark:border-surface-800">
-            <p className="text-4xl mb-4" aria-hidden="true">📋</p>
+            <HiOutlineClipboardDocumentList className="w-12 h-12 text-surface-300 mx-auto mb-4" />
             <p className="font-semibold text-surface-500">No audit logs found.</p>
           </div>
         )}

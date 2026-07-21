@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { lazy, Suspense } from "react";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 
 // Lazy load route components for code splitting
 const Login = lazy(() => import("./pages/auth/Login"));
@@ -71,8 +72,9 @@ export default function App() {
           },
         }}
       />
-      <Suspense fallback={<LoadingSpinner />}>
-        <Routes>
+      <ErrorBoundary>
+        <Suspense fallback={<LoadingSpinner />}>
+          <Routes>
           {/* Public */}
           <Route path="/login" element={<Login />} />
           {/* <Route path="/register" element={<Register />} /> */}
@@ -184,6 +186,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </Suspense>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 }

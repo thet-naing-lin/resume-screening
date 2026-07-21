@@ -8,6 +8,7 @@ import {
   HiOutlineXMark,
   HiOutlineTrash,
   HiOutlineNoSymbol,
+  HiOutlineDocumentText,
 } from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import DeleteModal from "../../components/common/DeleteModal";
@@ -164,7 +165,9 @@ export default function ResumeList() {
         {error && (
           <div className="flash-error">
             <span>{error}</span>
-            <button onClick={() => setError("")} className="font-bold ml-4">✕</button>
+            <button onClick={() => setError("")} className="font-bold ml-4" aria-label="Dismiss error">
+              <HiOutlineXMark className="w-4 h-4" />
+            </button>
           </div>
         )}
 
@@ -241,7 +244,11 @@ export default function ResumeList() {
 
           {!initialLoading && filtered.length === 0 && !error && (
             <div className="py-16 text-center">
-              <p className="text-4xl mb-4" aria-hidden="true">{search || filterJob !== "all" ? "🔍" : "📄"}</p>
+              {search || filterJob !== "all" ? (
+                <HiOutlineMagnifyingGlass className="w-12 h-12 text-surface-300 mx-auto mb-4" />
+              ) : (
+                <HiOutlineDocumentText className="w-12 h-12 text-surface-300 mx-auto mb-4" />
+              )}
               <p className="font-semibold text-surface-500">
                 {search || filterJob !== "all" ? "No resumes match your search." : "No resumes uploaded yet"}
               </p>

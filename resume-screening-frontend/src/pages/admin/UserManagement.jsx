@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { HiOutlinePlus } from "react-icons/hi2";
+import { HiOutlinePlus, HiOutlineUserGroup, HiOutlineXMark } from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getUsers, assignRole, deleteUser, createUser } from "../../api/userApi";
 import DeleteModal from "../../components/common/DeleteModal";
@@ -107,7 +107,7 @@ export default function UserManagement() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-5xl mx-auto animate-fade-in">
+      <div className="max-w-6xl mx-auto animate-fade-in">
         {/* Header */}
         <div className="page-header">
           <div>
@@ -124,7 +124,9 @@ export default function UserManagement() {
         {error && (
           <div className="flash-error">
             <span>{error}</span>
-            <button onClick={() => setError("")} className="font-bold ml-4">✕</button>
+            <button onClick={() => setError("")} className="font-bold ml-4" aria-label="Dismiss error">
+              <HiOutlineXMark className="w-4 h-4" />
+            </button>
           </div>
         )}
 
@@ -176,7 +178,7 @@ export default function UserManagement() {
             </div>
           ) : users.length === 0 ? (
             <div className="py-16 text-center">
-              <p className="text-4xl mb-4" aria-hidden="true">👥</p>
+              <HiOutlineUserGroup className="w-12 h-12 text-surface-300 mx-auto mb-4" />
               <p className="font-semibold text-surface-500">No users found</p>
             </div>
           ) : (
