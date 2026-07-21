@@ -3,6 +3,10 @@ import toast from "react-hot-toast";
 import {
   HiOutlineFunnel,
   HiOutlineEnvelope,
+  HiOutlineMagnifyingGlass,
+  HiOutlineLightBulb,
+  HiOutlineDocumentText,
+  HiOutlineSparkles,
 } from "react-icons/hi2";
 import DashboardLayout from "../../components/layout/DashboardLayout";
 import { getJobs } from "../../api/jobApi";
@@ -149,7 +153,7 @@ export default function CandidateRankingPage() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-7xl mx-auto animate-fade-in">
+      <div className="max-w-6xl mx-auto animate-fade-in">
         <div className="page-header">
           <div>
             <h1>Candidate Rankings</h1>
@@ -241,7 +245,7 @@ export default function CandidateRankingPage() {
             {!loading && !error && candidates.length === 0 && (
               <div className="bg-white rounded-3xl border border-surface-200 py-16 text-center shadow-card
                               dark:bg-surface-900 dark:border-surface-800">
-                <p className="text-4xl mb-4" aria-hidden="true">🔎</p>
+                <HiOutlineMagnifyingGlass className="w-12 h-12 text-surface-300 mx-auto mb-4" />
                 <p className="font-semibold text-surface-500">No candidates found.</p>
                 <p className="text-sm text-surface-400 mt-1">
                   Try clearing the filters or upload more resumes for this job.
@@ -258,8 +262,9 @@ export default function CandidateRankingPage() {
                       Ranked Candidates
                       <span className="text-sm text-surface-400 font-normal ml-2">({meta?.total} total)</span>
                     </h2>
-                    <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 mt-2 inline-block">
-                      💡 For AI Insights, need VPN in Myanmar
+                    <p className="text-xs text-amber-600 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5 mt-2 inline-flex items-center gap-1.5">
+                      <HiOutlineLightBulb className="w-3.5 h-3.5" />
+                      For AI Insights, need VPN in Myanmar
                     </p>
                   </div>
                   <div className="flex flex-wrap items-center gap-2">
@@ -302,8 +307,9 @@ export default function CandidateRankingPage() {
                           <td>
                             <p className="font-semibold text-surface-900 dark:text-surface-100">{item.candidate.name}</p>
                             <p className="text-surface-400 text-xs">{item.candidate.email}</p>
-                            <p className="text-surface-400 text-xs truncate max-w-[180px]">
-                              <span aria-hidden="true">📄</span> {item.original_filename}
+                            <p className="text-surface-400 text-xs truncate max-w-[180px] flex items-center gap-1">
+                              <HiOutlineDocumentText className="w-3.5 h-3.5 shrink-0" />
+                              {item.original_filename}
                             </p>
                           </td>
                           <td className="text-center text-surface-600 dark:text-surface-300">
@@ -338,7 +344,8 @@ export default function CandidateRankingPage() {
                                                  font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30
                                                  dark:bg-brand-900/30 dark:text-brand-400 dark:hover:bg-brand-900/50"
                                       aria-label={`AI Insights for ${item.candidate.name}`}>
-                                <span aria-hidden="true">✨</span> AI Insights
+                                <HiOutlineSparkles className="w-3.5 h-3.5" />
+                                AI Insights
                               </button>
                               <button onClick={() => setMailTarget(item)}
                                       className="text-xs bg-emerald-50 text-emerald-700 hover:bg-emerald-100
@@ -346,7 +353,8 @@ export default function CandidateRankingPage() {
                                                  font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500/30
                                                  dark:bg-emerald-900/30 dark:text-emerald-400 dark:hover:bg-emerald-900/50"
                                       aria-label={`Send mail to ${item.candidate.name}`}>
-                                <span aria-hidden="true">✉️</span> Send Mail
+                                <HiOutlineEnvelope className="w-3.5 h-3.5" />
+                                Send Mail
                               </button>
                             </div>
                           </td>

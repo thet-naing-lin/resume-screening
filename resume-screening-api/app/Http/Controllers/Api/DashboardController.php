@@ -51,7 +51,7 @@ class DashboardController extends Controller
         $recentActivity = $activityQuery->get()->map(fn($log) => [
             'action'     => $log->action,
             'metadata'   => $log->metadata,
-            'created_at' => $log->created_at->diffForHumans(),
+            'created_at' => $log->created_at,
         ]);
 
         return response()->json([
